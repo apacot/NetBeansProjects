@@ -1,0 +1,420 @@
+ /*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 11 nov. 2019, 17:17:43
+    Modified on : 18 nov. 2019, 16:45:32
+    Author     : PACOT
+*/
+
+/* situation 1 */
+@media screen and (max-width:950px)
+{
+      #portrait{
+  position: absolute;
+  border: 1px ridge green;
+  border-radius: 5px;
+    background-position: top;
+    background:linear-gradient(to top,green,black);
+    width:380px;
+    height:400px;
+    left:5px;
+    top:5px;
+  }
+  
+  .photo{
+    position: absolute;
+    width: 200px;
+    height: 350px;
+    left: 90px;
+    top: 30px;
+    animation: rotateAnim 10s linear infinite;
+     
+  }
+  
+  .nom{
+      color: yellow;
+      font-style: italic;
+      text-align: center;
+      font-size: x-large;
+      font-weight: bold;
+  }
+  
+  #fiche{
+  position: absolute;
+  border: 1px ridge black;
+  border-radius: 5px;
+  background-color: black;
+    width:680px;
+    height:700px;
+    left:5px;
+    top:10px;
+    
+  }
+
+  @keyframes rotateAnim {
+    from {transform: rotateY(0);}
+    to {transform: rotateY(360deg);}
+}
+ 
+      #stats{
+  position: absolute;
+  border: 1px ridge purple;
+  border-radius: 5px;
+    background-position: top;
+    background:linear-gradient(to top,purple,white);
+    width:380px;
+    height:200px;
+    left:5px;
+    top:430px;
+  
+
+}
+
+      #attaque{
+  position: absolute;
+  border: 1px ridge red;
+  border-radius: 5px;
+    background-position: top;
+    background:linear-gradient(to top,orange,white);
+    width:200px;
+    height:310px;
+    left:400px;
+    top:80px;
+  
+
+}
+
+
+      #defense{
+  position: absolute;
+  border: 1px ridge cyan;
+  border-radius: 5px;
+    background-position: top;
+    background:linear-gradient(to top,blue,white);
+    width:200px;
+    height:100px;
+    left:400px;
+    top:440px;
+  
+
+}
+.statistiques{
+    text-align: left;
+    color : purple;
+    font-size: x-large;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.attaques{
+    text-align: left;
+    color : red;
+    font-size: x-large;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.defenses{
+    text-align: left;
+    color : blue;
+    font-size: x-large;
+    font-style: italic;
+    font-weight: bold;
+}
+
+
+     div#stats:hover{
+        box-shadow: 5px 5px 25px 5px purple;     
+    }   
+    
+        div#defense:hover{
+        box-shadow: 5px 5px 25px 5px blue;
+        
+    }
+    
+        div#attaque:hover{
+        box-shadow: 5px 5px 25px 5px red;
+        
+    }
+    
+        div#portrait:hover{
+        box-shadow: 5px 5px 25px 5px green;
+        
+    }
+}
+
+/* situation 2 */
+@media screen and (max-width:690px)
+{
+       #portrait{
+  position: absolute;
+  border: 1px ridge green;
+  border-radius: 5px;
+    background-position: top;
+    background:linear-gradient(to top,green,black);
+    width:320px;
+    height:300px;
+    left:5px;
+    top:5px;
+  }
+   
+  .photo{
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    left: 50px;
+    top: 50px;
+    animation: rotateAnim 10s linear infinite;
+     
+  }
+  
+  .nom{
+      color: yellow;
+      font-style: italic;
+      text-align: center;
+      font-size: x-large;
+      font-weight: bold;
+  }
+  
+  #fiche{
+  position: absolute;
+  border: 1px ridge black;
+  border-radius: 5px;
+  background-color: black;
+    width:330px;
+    height:885px;
+    left:5px;
+    top:10px;
+    
+  }
+
+  @keyframes rotateAnim {
+    from {transform: rotateY(0);}
+    to {transform: rotateY(360deg);}
+}
+ 
+      #stats{
+  position: absolute;
+  border: 1px ridge purple;
+  border-radius: 5px;
+    background-position: top;
+    background:linear-gradient(to top,purple,white);
+    width:320px;
+    height:200px;
+    left:5px;
+    top:310px;
+  
+
+}
+
+      #attaque{
+  position: absolute;
+  border: 1px ridge red;
+  border-radius: 5px;
+    background-position: top;
+    background:linear-gradient(to top,orange,white);
+    width:320px;
+    height:260px;
+    left:5px;
+    top:515px;
+  
+
+}
+
+
+      #defense{
+  position: absolute;
+  border: 1px ridge cyan;
+  border-radius: 5px;
+    background-position: top;
+    background:linear-gradient(to top,blue,white);
+    width:320px;
+    height:100px;
+    left:5px;
+    top:780px;
+  
+
+}
+.statistiques{
+    text-align: left;
+    color : purple;
+    font-size: x-large;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.attaques{
+    text-align: left;
+    color : red;
+    font-size: x-large;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.defenses{
+    text-align: left;
+    color : blue;
+    font-size: x-large;
+    font-style: italic;
+    font-weight: bold;
+}
+
+     div#stats:hover{
+        box-shadow: 5px 5px 25px 5px purple;     
+    }   
+    
+        div#defense:hover{
+        box-shadow: 5px 5px 25px 5px blue;
+        
+    }
+    
+        div#attaque:hover{
+        box-shadow: 5px 5px 25px 5px red;
+        
+    }
+    
+        div#portrait:hover{
+        box-shadow: 5px 5px 25px 5px green;
+        
+    }
+    
+}
+/* situation 3 */
+@media screen and (min-width:950px)
+{
+  #portrait{
+  position: absolute;
+  border: 1px ridge green;
+  border-radius: 5px;
+    background-position: top;
+    background:linear-gradient(to top,green,black);
+    width:500px;
+    height:400px;
+    left:5px;
+    top:5px;
+  }
+  
+  .photo{
+    position: absolute;
+    width: 300px;
+    height: 350px;
+    left: 100px;
+    top: 30px;
+    animation: rotateAnim 10s linear infinite;
+     
+  }
+  
+  .nom{
+      color: yellow;
+      font-style: italic;
+      text-align: center;
+      font-size: x-large;
+      font-weight: bold;
+  }
+  
+  #fiche{
+  position: absolute;
+  border: 1px ridge black;
+  border-radius: 5px;
+  background-color: black;
+    width:920px;
+    height:630px;
+    left:5px;
+    top:0px;
+    
+  }
+
+  @keyframes rotateAnim {
+    from {transform: rotateY(0);}
+    to {transform: rotateY(360deg);}
+}
+ 
+      #stats{
+  position: absolute;
+  border: 1px ridge purple;
+  border-radius: 5px;
+    background-position: top;
+    background:linear-gradient(to top,purple,white);
+    width:440px;
+    height:200px;
+    left:30px;
+    top:415px;
+  
+
+}
+
+      #attaque{
+  position: absolute;
+  border: 1px ridge red;
+  border-radius: 5px;
+    background-position: top;
+    background:linear-gradient(to top,orange,white);
+    width:280px;
+    height:260px;
+    left:580px;
+    top:90px;
+  
+
+}
+
+
+      #defense{
+  position: absolute;
+  border: 1px ridge cyan;
+  border-radius: 5px;
+    background-position: top;
+    background:linear-gradient(to top,blue,white);
+    width:280px;
+    height:100px;
+    left:580px;
+    top:400px;
+  
+
+}
+.statistiques{
+    text-align: left;
+    color : purple;
+    font-size: x-large;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.attaques{
+    text-align: left;
+    color : red;
+    font-size: x-large;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.defenses{
+    text-align: left;
+    color : blue;
+    font-size: x-large;
+    font-style: italic;
+    font-weight: bold;
+}
+
+     div#stats:hover{
+        box-shadow: 5px 5px 25px 5px purple;     
+    }   
+    
+        div#defense:hover{
+        box-shadow: 5px 5px 25px 5px blue;
+        
+    }
+    
+        div#attaque:hover{
+        box-shadow: 5px 5px 25px 5px red;
+        
+    }
+    
+        div#portrait:hover{
+        box-shadow: 5px 5px 25px 5px green;
+        
+    }
+
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Formulaire d'inscription</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="formulaire.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        <form>
+            <fieldset>
+                <legend>Formulaire d'inscription</legend>
+                <fieldset class="civilite">
+                    
+                    <legend>Civilités</legend>
+                    <label for="nom" id="label_nom">Nom</label>
+                    <input type="text" name="nom" id="nom"/><br/>
+                    <label for="prenom" id="label_prenom">Prénom</label>
+                    <input type="text" name="prenom" id="prenom"/><br/>
+                    <label for="ville" id="label_ville">Ville</label>
+                    <select name="Ville" id="ville">
+                        <option value="autre">Autre</option>
+                        <option value="lemans">Le Mans</option>
+                        <option value="paris">Paris</option>
+                    </select><br/>
+                    <label for="email" id="label_email">Email</label>
+                    <input type="email" name="email" id="email"/><br/>
+                    <label for="site" id="label_site">Site</label>
+                    <input type="url" name="site" id="site"/><br/>                        
+                    <input type="radio" name="sexe" id="masc" value="1"/>
+                    <label for="masc" id="button_masc">Masculin</label><br/>
+                    <label for="femi" id="label_sexe">Sexe</label>                        
+                    <input type="radio" name="sexe" id="femi" value="2"/>
+                    <label for="femi" id="button_femi">Féminin</label><br/>                        
+                    <input type="radio" name="sexe" id="inco" value="3"/>
+                    <label for="inco" id="button_inco">Je ne souhaite pas le dire</label><br/>
+                    <label for="fic_photo" id="label_photo">Photo</label>
+                    <input type="file" name="fic_photo" id="fic_photo" />                    
+                </fieldset>
+                <fieldset class="savoir">
+                    <legend>Savoirs</legend>
+                </fieldset>
+                <fieldset class="connexion">
+                    <legend>Paramètres de connexion</legend>
+                </fieldset>
+            </fieldset>     
+
+        </form>
+    </body>
+</html>

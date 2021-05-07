@@ -1,0 +1,24 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 9 oct. 2019, 11:02:43
+    Author     : apacot
+*/
+
+div{
+    border: 2px solid blue;
+    background-image: url("cisco.jpg");
+    background-size: 50% auto;
+    background-size: 3em 25%;
+    background-size: auto 320px;
+    background-size: auto 200px;
+    width: 320px;
+    height: 150px;
+}
+img{
+    width: 320px;
+    height: 150px;
+}

@@ -1,0 +1,207 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 21 janv. 2015, 10:15:24
+    Author     : dbernard
+*/
+
+#contour{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 145px;
+    height: 180px;
+    background-color: lightgrey;
+    border: 2px ridge black;
+    border-radius: 4px;
+}
+
+#ecran{
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 130px;
+    height: 20px;
+    background-color: lightyellow;
+     border: 2px solid grey;
+    border-radius: 2px;
+}
+
+#sept{
+    position: absolute;    
+    top: 40px;
+    left: 5px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+
+}
+#huit{
+    position: absolute;    
+    top: 40px;
+    left: 40px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+
+}
+#neuf{
+    position: absolute;    
+    top: 40px;
+    left: 75px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+}
+
+#divise{
+    position: absolute;    
+    top: 40px;
+    left: 110px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+
+}
+
+#quatre{
+    position: absolute;    
+    top: 75px;
+    left: 5px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+
+}
+#cinq{
+    position: absolute;    
+    top: 75px;
+    left: 40px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+}
+#six{
+    position: absolute;    
+    top: 75px;
+    left: 75px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+
+}
+
+#multiplie{
+    position: absolute;    
+    top: 75px;
+    left: 110px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+}
+#un{
+    position: absolute;    
+    top: 110px;
+    left: 5px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+}
+#deux{
+    position: absolute;    
+    top: 110px;
+    left: 40px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+
+}
+#trois{
+    position: absolute;    
+    top: 110px;
+    left: 75px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+}
+
+#moins{
+    position: absolute;    
+    top: 110px;
+    left: 110px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+}
+
+#zero{
+    position: absolute;    
+    top: 145px;
+    left: 5px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+
+}
+#virgule{
+    position: absolute;    
+    top: 145px;
+    left: 40px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+}
+#egal{
+    position: absolute;    
+    top: 145px;
+    left: 75px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+}
+#plus{
+    position: absolute;    
+    top: 145px;
+    left: 110px;
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px ridge black;
+    border-radius: 5px;
+}
+
+
+
