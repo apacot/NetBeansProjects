@@ -55,33 +55,34 @@ void tacheCarteSD(void *pvParameters) // <- une tâche
 
     for (;;) // <- boucle infinie
     {
-        /*//conversion des donnees en chaine de caractère pour enregristrement dans la carte SD
-        String sAltitude = String(donneesGPS.altitude);
-        String sLatitude = String(donneesGPS.latitude);
-        String sLongitude = String(donneesGPS.longitude);
 
-        String sAnnee = String(laDate.annee);
-        String sMois = String(laDate.mois);
-        String sJour = String(laDate.jour);
-
-        String sHeure = String(lHeure.heure);
-        String sMinute = String(lHeure.minute);
-        String sSeconde = String(lHeure.seconde);
-
-        String sCpm = String(donneesCapteurs.cpm);
-        String sPression = String(donneesCapteurs.pression);
-        String sTemp = String(donneesCapteurs.temperature);
-        String sHumidite = String(donneesCapteurs.humidite);*/
-
-        /* //construction de la ligne de données à enregistrer dans la carte SD
-         String messageSD = sAnnee + "-" + sMois + "-" + sJour + ";" + sHeure + ":" + sMinute + ":" + sSeconde + ";" + sLatitude
-                 + ";" + sLongitude + ";" + sAltitude + ";" + sTemp + ";" + sPression + ";" + sCpm + ";" + sHumidite + ";";*/
+        //Conversion + construction de la ligne de données à enregistrer dans la carte SD
+        //conversion de la date
+        String sDonnees = String(lesDonnees.date.annee)  + "-";
+        sDonnees += (lesDonnees.date.mois<10 ? "0" +String(lesDonnees.date.mois):String(lesDonnees.date.mois)) + "-";
+        sDonnees += String(lesDonnees.date.jour) + ";";
+        
+        //conversion de l'heure
+        sDonnees += String(lesDonnees.heures.heure) + ":";
+        sDonnees += String(lesDonnees.heures.minute) + ":";
+        sDonnees += String(lesDonnees.heures.seconde) + ";";
+        
+        //conversion de la position
+        sDonnees += String(lesDonnees.position.latitude) + ";";
+        sDonnees += String(lesDonnees.position.longitude) + ";";
+        sDonnees += String(lesDonnees.position.altitude) + ";";
+        
+        //conversion des données des capteurs
+        sDonnees += String(lesDonnees.DonneesCapteurs.temperature) + ";";
+        sDonnees += String(lesDonnees.DonneesCapteurs.pression) + ";";
+        sDonnees += String(lesDonnees.DonneesCapteurs.cpm) +";";
+        sDonnees += String(lesDonnees.DonneesCapteurs.humidite) +";";
 
         fichierCSV = SD.open("/TestCSV.csv", FILE_APPEND); //ouverture du fichier en modification
         if (!fichierCSV) {
             Serial.println("Echec ouverture du fichier");
         }
-        if (fichierCSV.println("2021-05-03;09:57:48;48.508944;-2.762288;17051;-12;62;856;33;")) //écriture de la ligne de données dans la carte SD
+        if (fichierCSV.println(sDonnees)) //écriture de la ligne de données dans la carte SD
         {
             Serial.println("Donnee enregistrée");
         } else {
@@ -120,11 +121,11 @@ void setup() {
     lesDonnees.position.longitude = -2.762288;
 
     lesDonnees.date.annee = 2021;
-    lesDonnees.date.mois = 04;
-    lesDonnees.date.jour = 02;
+    lesDonnees.date.mois = 05;
+    lesDonnees.date.jour = 07;
 
-    lesDonnees.heures.heure = 14;
-    lesDonnees.heures.minute = 20;
+    lesDonnees.heures.heure = 15;
+    lesDonnees.heures.minute = 36;
     lesDonnees.heures.seconde = 40;
 
     lesDonnees.DonneesCapteurs.cpm = 856;
