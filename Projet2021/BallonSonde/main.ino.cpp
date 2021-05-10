@@ -5,23 +5,27 @@
  * Created on 26 avril 2021, 13:57
  */
 
+#include <Arduino.h>
 #include "sigfox.h"
 #include <SD.h>
 #include <WiFi.h>
 #include <SPI.h>
 #include <FS.h>
+#include <string>
 
 #define SCK_PIN 14 //numéro de broche sck de l'esp32
 #define MISO_PIN 2 //numéro de broche MISO de l'esp32
 #define MOSI_PIN 15 //numéro de broche MOSI de l'esp32
-#define CS_PIN 3 //numéro de broche CS de l'esp32
+#define CS_PIN 13 //numéro de broche CS de l'esp32
 
 Sigfox BallonSig(27, 26, true);
 File fichierCSV;
 const char *ssid = "BallonSondeAP";
 const char *password = "totototo";
-const int broche_CS = 13; //broche cs du module SD connecté à l'esp
 typeDonnees lesDonnees;
+
+// Création d'un mutex
+SemaphoreHandle_t mutex = NULL;
 
 void tacheSigfox(void *pvParameters) // <- une tâche
 {
@@ -32,8 +36,15 @@ void tacheSigfox(void *pvParameters) // <- une tâche
 
     for (;;) // <- boucle infinie
     {
+        // Verrouillage du mutex
+        xSemaphoreTake(mutex, portMAX_DELAY);
+
         BallonSig.coderTrame(lesDonnees.position, lesDonnees.DonneesCapteurs);
         BallonSig.envoyer(BallonSig.trame, sizeof (BallonSig.trame));
+
+        // Déverrouillage du mutex
+        xSemaphoreGive(mutex);
+
         vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(600000)); // toutes les 600000 ms = 10 minutes
     }
 }
@@ -44,6 +55,7 @@ void tacheCarteSD(void *pvParameters) // <- une tâche
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
 
+    //initialisation systeme de fichier
     SPI.begin(SCK_PIN, MISO_PIN, MOSI_PIN, CS_PIN);
     delay(10);
 
@@ -55,42 +67,67 @@ void tacheCarteSD(void *pvParameters) // <- une tâche
 
     for (;;) // <- boucle infinie
     {
+        // Verrouillage du mutex
+        xSemaphoreTake(mutex, portMAX_DELAY);
 
         //Conversion + construction de la ligne de données à enregistrer dans la carte SD
         //conversion de la date
-        String sDonnees = String(lesDonnees.date.annee)  + "-";
-        sDonnees += (lesDonnees.date.mois<10 ? "0" +String(lesDonnees.date.mois):String(lesDonnees.date.mois)) + "-";
-        sDonnees += String(lesDonnees.date.jour) + ";";
-        
+        String sDonnees = String(lesDonnees.date.annee) + "-";
+        //si numéro du mois inférieur à 10 alors, ajout d'un 0 devant sinon, on ne fais rien 
+        sDonnees += (lesDonnees.date.mois < 10 ? "0" + String(lesDonnees.date.mois) : String(lesDonnees.date.mois)) + "-";
+        if (lesDonnees.date.jour < 10) {
+            sDonnees += "0" + String(lesDonnees.date.jour) + " ";
+        } else {
+            sDonnees += String(lesDonnees.date.jour) + " ";
+        }
+
+
         //conversion de l'heure
-        sDonnees += String(lesDonnees.heures.heure) + ":";
-        sDonnees += String(lesDonnees.heures.minute) + ":";
-        sDonnees += String(lesDonnees.heures.seconde) + ";";
-        
+        if (lesDonnees.heures.heure < 10) {
+            sDonnees += "0" + String(lesDonnees.heures.heure) + ":";
+        } else {
+            sDonnees += String(lesDonnees.heures.heure) + ":";
+        }
+        if (lesDonnees.heures.minute < 10) {
+            sDonnees += "0" + String(lesDonnees.heures.minute) + ":";
+        } else {
+            sDonnees += String(lesDonnees.heures.minute) + ":";
+        }
+        if (lesDonnees.heures.seconde < 10) {
+            sDonnees += "0" + String(lesDonnees.heures.seconde) + ";";
+        } else {
+            sDonnees += String(lesDonnees.heures.seconde) + ";";
+        }
+
         //conversion de la position
-        sDonnees += String(lesDonnees.position.latitude) + ";";
-        sDonnees += String(lesDonnees.position.longitude) + ";";
-        sDonnees += String(lesDonnees.position.altitude) + ";";
-        
+        sDonnees += String(lesDonnees.position.latitude,{6}) + ";";
+        sDonnees += String(lesDonnees.position.longitude,{6}) + ";";
+        sDonnees += String(lesDonnees.position.altitude,{0}) + ";";
+
         //conversion des données des capteurs
         sDonnees += String(lesDonnees.DonneesCapteurs.temperature) + ";";
         sDonnees += String(lesDonnees.DonneesCapteurs.pression) + ";";
-        sDonnees += String(lesDonnees.DonneesCapteurs.cpm) +";";
-        sDonnees += String(lesDonnees.DonneesCapteurs.humidite) +";";
+        sDonnees += String(lesDonnees.DonneesCapteurs.cpm) + ";";
+        sDonnees += String(lesDonnees.DonneesCapteurs.humidite) + ";";
 
         fichierCSV = SD.open("/TestCSV.csv", FILE_APPEND); //ouverture du fichier en modification
         if (!fichierCSV) {
-            Serial.println("Echec ouverture du fichier");
+            Serial.print("Echec ouverture du fichier\n");
         }
         if (fichierCSV.println(sDonnees)) //écriture de la ligne de données dans la carte SD
         {
-            Serial.println("Donnee enregistrée");
+            Serial.print("Donnee enregistrée\n");
         } else {
-            Serial.println("pb enregistrement donnee");
+            Serial.print("pb enregistrement donnee\n");
         }
         fichierCSV.close();
 
-        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(10000)); // toutes les 60000 ms = 1 minute
+        // Déverrouillage du mutex
+        xSemaphoreGive(mutex);
+
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(60000)); // toutes les 60000 ms = 1 minute
+
+
     }
 }
 
@@ -98,7 +135,7 @@ void tachePageWeb(void *pvParameters) // <- une tâche
 {
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    
+
     for (;;) // <- boucle infinie
     {
         if (lesDonnees.position.altitude >= 2000) {
@@ -109,13 +146,18 @@ void tachePageWeb(void *pvParameters) // <- une tâche
 }
 
 void setup() {
+
     Serial.begin(115200); //initialisation de la liaison série à l'esp32
+    delay(1000);
+
+    //initialisation du mutex
+    mutex = xSemaphoreCreateMutex();
 
     WiFi.softAPConfig(IPAddress(192, 168, 5, 1), IPAddress(192, 168, 5, 1), IPAddress(255, 255, 255, 0));
     WiFi.softAP(ssid, password); //création du point d'accès WIFI
 
     //simulation de données
-    
+
     lesDonnees.position.altitude = 17051;
     lesDonnees.position.latitude = 48.508944;
     lesDonnees.position.longitude = -2.762288;

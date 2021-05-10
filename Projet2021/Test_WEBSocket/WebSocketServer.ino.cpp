@@ -1,9 +1,9 @@
 #include <WiFi.h>
 #include <WebSockets.h>
 
-const char* ssid = "ssid"; //Enter SSID
-const char* password = "password"; //Enter Password
-const char* websockets_server = "www.myserver.com:8080"; //server adress and port
+const char* ssid = "BallonSonde"; //Enter SSID
+const char* password = "totototo"; //Enter Password
+const char* websockets_server = "www.BallonSonde.fr:8080"; //server adress and port
 
 void onMessageCallback(WebsocketsMessage message) {
     Serial.print("Got Message: ");
