@@ -105,14 +105,8 @@ void setup() {
     // Connect to Wi-Fi
     Serial.print("Creation du Point d'acces ...");
     WiFi.softAPConfig(IPAddress(192, 168, 5, 1), IPAddress(192, 168, 5, 1), IPAddress(255, 255, 255, 0));
+    delay(1000);
     WiFi.softAP(ssid, password); //Initialisation avec WiFi.softAP / ssid et password
-    while (WiFi.status() != WL_CONNECTED) {
-        delay(1000);
-        Serial.println("Connecting to WiFi..");
-    }
-
-    // Print ESP Local IP Address
-    Serial.println(WiFi.localIP());
 
     initWebSocket();
 
@@ -126,9 +120,7 @@ void setup() {
 }
 
 void loop() {
-    ws.cleanupClients();
-    digitalWrite(ledPin, ledState);
     Serial.print("Adresse IP: ");
     Serial.println(WiFi.softAPIP()); //Affiche l'adresse IP de l'ESP32 avec WiFi.SoftIP
-    delay(5000);
+    delay(1000);
 }
