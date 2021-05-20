@@ -29,6 +29,8 @@ SemaphoreHandle_t mutex = NULL;
 
 void tacheSigfox(void *pvParameters) // <- une tâche
 {
+    delay(30000);
+    
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
 
@@ -156,7 +158,7 @@ void setup() {
     WiFi.softAPConfig(IPAddress(192, 168, 5, 1), IPAddress(192, 168, 5, 1), IPAddress(255, 255, 255, 0));
     WiFi.softAP(ssid, password); //création du point d'accès WIFI
 
-    //simulation de données
+    /*//simulation de données
 
     lesDonnees.position.altitude = 17051;
     lesDonnees.position.latitude = 48.508944;
@@ -173,7 +175,7 @@ void setup() {
     lesDonnees.DonneesCapteurs.cpm = 856;
     lesDonnees.DonneesCapteurs.pression = 62;
     lesDonnees.DonneesCapteurs.temperature = -12;
-    lesDonnees.DonneesCapteurs.humidite = 33;
+    lesDonnees.DonneesCapteurs.humidite = 33;*/
 
     xTaskCreate(
             tacheSigfox, /* Task function. */
