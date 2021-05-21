@@ -158,24 +158,24 @@ void setup() {
     WiFi.softAPConfig(IPAddress(192, 168, 5, 1), IPAddress(192, 168, 5, 1), IPAddress(255, 255, 255, 0));
     WiFi.softAP(ssid, password); //création du point d'accès WIFI
 
-    /*//simulation de données
+    //simulation de données
 
-    lesDonnees.position.altitude = 17051;
+    lesDonnees.position.altitude = 1050;
     lesDonnees.position.latitude = 48.508944;
     lesDonnees.position.longitude = -2.762288;
 
     lesDonnees.date.annee = 2021;
     lesDonnees.date.mois = 05;
-    lesDonnees.date.jour = 07;
+    lesDonnees.date.jour = 21;
 
     lesDonnees.heures.heure = 15;
     lesDonnees.heures.minute = 36;
     lesDonnees.heures.seconde = 40;
 
-    lesDonnees.DonneesCapteurs.cpm = 856;
-    lesDonnees.DonneesCapteurs.pression = 62;
-    lesDonnees.DonneesCapteurs.temperature = -12;
-    lesDonnees.DonneesCapteurs.humidite = 33;*/
+    lesDonnees.DonneesCapteurs.cpm = 6;
+    lesDonnees.DonneesCapteurs.pression = 1005;
+    lesDonnees.DonneesCapteurs.temperature = 20;
+    lesDonnees.DonneesCapteurs.humidite = 33;
 
     xTaskCreate(
             tacheSigfox, /* Task function. */

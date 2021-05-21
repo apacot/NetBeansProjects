@@ -7,12 +7,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD:Projet2021/Test_WEBSocket/nbproject/private/private.xml
-            <file>file:/home/USERS/ELEVES/SNIR2019/apacot/Documents/NetBeansProjects/Projet2021/Test_WEBSocket/WebSocketServer.ino.cpp</file>
-=======
-            <file>file:/home/antoine/Documents/NetBeansProjects/Projet2021/testWebSocket/main.ino.cpp</file>
-            <file>file:/home/antoine/Documents/NetBeansProjects/Projet2021/testWebSocket/Makefile</file>
->>>>>>> 64fbd94333c8c7bd6bd78147b35bfd5de753b80b:Projet2021/testWebSocket/nbproject/private/private.xml
+            <file>file:/home/USERS/ELEVES/SNIR2019/apacot/Documents/NetBeansProjects/Projet2021/testWebSocket/main.ino.cpp</file>
+            <file>file:/home/USERS/ELEVES/SNIR2019/apacot/Documents/NetBeansProjects/Projet2021/testWebSocket/Makefile</file>
         </group>
     </open-files>
 </project-private>

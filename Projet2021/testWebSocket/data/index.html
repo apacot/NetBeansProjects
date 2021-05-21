@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Page WEB esp32</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript">
+            function coderEtEnvoyer() {
+                coderTrame();
+                setTimeout(Envoyer(),5000);
+            }
+            ;
+            function coderTrame() {
+                document.getElementById("texteDonnees").innerHTML = "testTexteDansLaDiv";
+            }
+            ;
+            function Envoyer() {
+                document.getElementById("Texte2").innerHTML = "2eTestDeTexteDansLeDiv";
+            }
+            ;
+
+        </script>
+    </head>
+    <body>
+        <div id="texteDonnees"></div>
+        <div id="Texte2"></div>
+        <input type="button" name="boutonEnvoyer" value="EnvoyerTrame" onclick="coderEtEnvoyer()">
+    </body>
+</html>
