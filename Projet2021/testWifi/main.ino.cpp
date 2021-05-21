@@ -1,6 +1,6 @@
 #include <Arduino.h> 
 #include <WiFi.h>
-const char *ssid = "ESP32AP";
+const char *ssid = "BallonSonde";
 const char *password = "totototo";
 
 void setup() 
