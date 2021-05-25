@@ -10,19 +10,18 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script type="text/javascript">
-            function coderEtEnvoyer() {
-                coderTrame();
-                setTimeout(Envoyer(),5000);
-            }
-            ;
+            function coderEtEnvoyer() 
+            {
+            coderTrame();
+            setTimeout(function()
+                {
+                    document.getElementById("Texte2").innerHTML = "2eTestDeTexteDansLeDiv";
+                }, 5000);
+            };
+            
             function coderTrame() {
-                document.getElementById("texteDonnees").innerHTML = "testTexteDansLaDiv";
-            }
-            ;
-            function Envoyer() {
-                document.getElementById("Texte2").innerHTML = "2eTestDeTexteDansLeDiv";
-            }
-            ;
+            document.getElementById("texteDonnees").innerHTML = "testTexteDansLaDiv";
+            };
 
         </script>
     </head>
