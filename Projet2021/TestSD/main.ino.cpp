@@ -3,10 +3,10 @@
 #include <SPI.h>
 #include <FS.h>
 
-#define SCK_PIN = 14 //numéro de broche sck de l'esp32
-#define MISO_PIN = 2 //numéro de broche MISO de l'esp32
-#define MOSI_PIN = 15 //numéro de broche MOSI de l'esp32
-#define CS_PIN = 13 //numéro de broche CS de l'esp32
+#define SCK_PIN 14 //numéro de broche sck de l'esp32
+#define MISO_PIN 2 //numéro de broche MISO de l'esp32
+#define MOSI_PIN 15 //numéro de broche MOSI de l'esp32
+#define CS_PIN 13 //numéro de broche CS de l'esp32
 
 File fichierCSV;
 

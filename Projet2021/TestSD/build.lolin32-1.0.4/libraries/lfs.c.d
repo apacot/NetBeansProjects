@@ -1,0 +1,31 @@
+build.lolin32-1.0.4/libraries/lfs.c.o: \
+ /opt/Esp8266-Arduino-Makefile/libraries/LITTLEFS/src/lfs.c \
+ /opt/Esp8266-Arduino-Makefile/libraries/LITTLEFS/src/lfs.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/stdint.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/machine/_default_types.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/sys/features.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/sys/_intsup.h \
+ /opt/Esp8266-Arduino-Makefile/libraries/LITTLEFS/src/lfs_util.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/string.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/_ansi.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/newlib.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/sys/config.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/machine/ieeefp.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/esp32/xtensa/config/core-isa.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/sys/reent.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/_ansi.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/sys/_types.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/machine/_types.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/sys/lock.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/sys/cdefs.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/sys/string.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/inttypes.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/stdlib.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/machine/stdlib.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/alloca.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/assert.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/stdio.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/sys/types.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/machine/types.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/sys/sched.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/sys/stdio.h

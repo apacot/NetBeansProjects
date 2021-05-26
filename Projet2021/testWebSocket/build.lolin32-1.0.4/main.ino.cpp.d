@@ -186,4 +186,41 @@ build.lolin32-1.0.4/main.ino.cpp.o: main.ino.cpp \
  /opt/Esp8266-Arduino-Makefile/libraries/ESPAsyncWebServer/src/WebHandlerImpl.h \
  /opt/Esp8266-Arduino-Makefile/libraries/ESPAsyncWebServer/src/AsyncWebSocket.h \
  /opt/Esp8266-Arduino-Makefile/libraries/ESPAsyncWebServer/src/AsyncWebSynchronization.h \
- /opt/Esp8266-Arduino-Makefile/libraries/ESPAsyncWebServer/src/AsyncEventSource.h
+ /opt/Esp8266-Arduino-Makefile/libraries/ESPAsyncWebServer/src/AsyncEventSource.h \
+ /opt/Esp8266-Arduino-Makefile/libraries/WebSocket/src/WebSocketsServer.h \
+ /opt/Esp8266-Arduino-Makefile/libraries/WebSocket/src/WebSockets.h \
+ /opt/Esp8266-Arduino-Makefile/libraries/WebSocket/src/WebSocketsVersion.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WiFiClientSecure/src/WiFiClientSecure.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WiFiClientSecure/src/ssl_client.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/platform.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/esp_config.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/esp_mem.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/check_config.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/platform_time.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/net.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/net_sockets.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/ssl.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/bignum.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/ecp.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/ssl_ciphersuites.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/pk.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/md.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/rsa.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/ecdsa.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/cipher.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/x509_crt.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/x509.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/asn1.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/x509_crl.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/dhm.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/ecdh.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/debug.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/ssl.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/entropy.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/sha512.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/ctr_drbg.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/aes.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/aes_alt.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/esp32/hwcrypto/aes.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/esp32/rom/aes.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/error.h

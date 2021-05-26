@@ -12,17 +12,99 @@
 #include <SPI.h>
 #include <FS.h>
 #include <string>
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+#include <WebSocketsServer.h>
 
+//Constantes
 #define SCK_PIN 14 //numéro de broche sck de l'esp32
 #define MISO_PIN 2 //numéro de broche MISO de l'esp32
 #define MOSI_PIN 15 //numéro de broche MOSI de l'esp32
 #define CS_PIN 13 //numéro de broche CS de l'esp32
 
+#define IP_LOCAL IPAddress(192,168,5,1) //adresse ip local de l'esp
+#define GATEWAY IPAddress(192,168,5,1) //passerelle
+#define MASQUE IPAddress(255,255,255,0) //masque de sous-réseaux
+
+const char *ssid = "BallonSonde";
+const char *password = "BallonSonde2021";
+
+// Globales
 Sigfox BallonSig(27, 26, true);
 File fichierCSV;
-const char *ssid = "BallonSondeAP";
-const char *password = "totototo";
+AsyncWebServer server(80);
+WebSocketsServer ws(81);
 typeDonnees lesDonnees;
+
+char webpage[] PROGMEM = R"=====(
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Page WEB esp32</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript">
+            function coderEtEnvoyer()
+            {
+                coderTrame();
+                setTimeout(function ()
+                {
+                    document.getElementById("Texte2").innerHTML = "2eTestDeTexteDansLeDiv";
+                }, 5000);
+            }
+            ;
+
+            function coderTrame() {
+                document.getElementById("texteDonnees").innerHTML = "testTexteDansLaDiv";
+            }
+            ;
+
+        </script>
+    </head>
+    <body>
+        <div id="texteDonnees"></div>
+        <div id="Texte2"></div>
+        <input type="button" name="boutonEnvoyer" value="EnvoyerTrame" onclick="coderEtEnvoyer()">
+    </body>
+</html>
+
+)=====";
+
+/***********************************************************
+ * Fonctions
+ */
+
+void notFound(AsyncWebServerRequest *request) {
+    request->send(404, "text/plain", "Page Not found");
+}
+
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
+
+    switch (type) {
+        case WStype_DISCONNECTED:
+            Serial.printf("[%u] Disconnected!\n", num);
+            break;
+        case WStype_CONNECTED:
+        {
+            IPAddress ip = ws.remoteIP(num);
+            Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+
+            // send message to client
+            ws.sendTXT(num, "Connected from server");
+        }
+            break;
+        case WStype_TEXT:
+            Serial.printf("[%u] get Text: %s\n", num, payload);
+            String message = String((char*) (payload));
+            Serial.println(message);
+
+    }
+}
 
 // Création d'un mutex
 SemaphoreHandle_t mutex = NULL;
@@ -30,7 +112,7 @@ SemaphoreHandle_t mutex = NULL;
 void tacheSigfox(void *pvParameters) // <- une tâche
 {
     delay(30000);
-    
+
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
 
@@ -138,10 +220,32 @@ void tachePageWeb(void *pvParameters) // <- une tâche
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
 
+    server.on("/", [](AsyncWebServerRequest * request) {
+
+        request->send_P(200, "text/html", webpage);
+    });
+
+    server.onNotFound(notFound);
+
+    server.begin();
+    ws.begin();
+    ws.onEvent(webSocketEvent);
+
     for (;;) // <- boucle infinie
     {
+        ws.loop();
+
         if (lesDonnees.position.altitude >= 2000) {
             WiFi.softAPdisconnect(true);
+        }
+
+
+        if (WiFi.softAPgetStationNum() == 0) {
+            delay(50000); //attendre 5 minutes
+            if (WiFi.softAPgetStationNum() == 0) //si toujours aucun client
+            {
+                WiFi.softAPdisconnect(false); //deconnecter le wifi
+            }
         }
         vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(30000)); // toutes les 30000 ms = 30 secondes
     }
@@ -155,8 +259,9 @@ void setup() {
     //initialisation du mutex
     mutex = xSemaphoreCreateMutex();
 
-    WiFi.softAPConfig(IPAddress(192, 168, 5, 1), IPAddress(192, 168, 5, 1), IPAddress(255, 255, 255, 0));
-    WiFi.softAP(ssid, password); //création du point d'accès WIFI
+    // Configuration et création du point d'accès
+    WiFi.softAPConfig(IP_LOCAL, GATEWAY, MASQUE);
+    WiFi.softAP(ssid, password);
 
     //simulation de données
 
@@ -196,13 +301,13 @@ void setup() {
     xTaskCreate(
             tachePageWeb, /* Task function. */
             "tachePageWeb", /* name of task. */
-            10000, /* Stack size of task */
+            20000, /* Stack size of task */
             NULL, /* parameter of the task */
-            1, /* priority of the task */
+            2, /* priority of the task */
             NULL); /* Task handle to keep track of created task */
 
 }
 
 void loop() {
-
+    ws.loop();
 } 
