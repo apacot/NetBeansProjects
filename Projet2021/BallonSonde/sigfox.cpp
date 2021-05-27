@@ -142,28 +142,28 @@ bool Sigfox::envoyer(const void* data, uint8_t size){
 }
 
 
-void Sigfox::coderTrame(typePosition donneesGPS, typeDonneesCapteurs lesDonneesCapteurs)
+void Sigfox::coderTrame(typeDonnees lesDonnees)
 {
     //conversion des donnees    
-    unsigned short int altitude = donneesGPS.altitude;
-    unsigned int latitude = donneesGPS.latitude * 1000000.0;
+    unsigned short int altitude = lesDonnees.position.altitude;
+    unsigned int latitude = lesDonnees.position.latitude * 1000000.0;
     unsigned int longitude;
-    unsigned short int radiationCpm = lesDonneesCapteurs.cpm;
-    unsigned short int pression = lesDonneesCapteurs.pression;
-    byte temperature = lesDonneesCapteurs.temperature;
+    unsigned short int radiationCpm = lesDonnees.DonneesCapteurs.cpm;
+    unsigned short int pression = lesDonnees.DonneesCapteurs.pression;
+    byte temperature = lesDonnees.DonneesCapteurs.temperature;
     
     //traitement temperature
-    if (lesDonneesCapteurs.temperature < 0) {
-        temperature = lesDonneesCapteurs.temperature * (-1.0);
+    if (lesDonnees.DonneesCapteurs.temperature < 0) {
+        temperature = lesDonnees.DonneesCapteurs.temperature * (-1.0);
     }
     
     //traitement longitude
-    if (donneesGPS.longitude < 0) {
-        longitude = donneesGPS.longitude * (-1000000.0);
+    if (lesDonnees.position.longitude < 0) {
+        longitude = lesDonnees.position.longitude * (-1000000.0);
     }
     else
     {
-        longitude = donneesGPS.longitude * (1000000.0);
+        longitude = lesDonnees.position.longitude * (1000000.0);
     }
     
     byte octetCourant; //variable sur un octet (= 8bits)
@@ -197,7 +197,7 @@ void Sigfox::coderTrame(typePosition donneesGPS, typeDonneesCapteurs lesDonneesC
     quartetGauche = altitude << 6;
     octetCourant = quartetDroit | quartetGauche;
 
-    if (lesDonneesCapteurs.temperature < 0) // Si température négatif
+    if (lesDonnees.DonneesCapteurs.temperature < 0) // Si température négatif
     {
         octetCourant = octetCourant | 0x20; //bit de signe à 1
     } else {
@@ -234,7 +234,7 @@ void Sigfox::coderTrame(typePosition donneesGPS, typeDonneesCapteurs lesDonneesC
     quartetGauche = latitude << 5;
     octetCourant = quartetDroit | quartetGauche;
 
-    if (donneesGPS.longitude < 0) {
+    if (lesDonnees.position.longitude < 0) {
         octetCourant = octetCourant | 0x10; //bit de signe à 1
     } else {
         octetCourant = octetCourant & 0xEF; //bit de signe à 0
@@ -255,4 +255,6 @@ void Sigfox::coderTrame(typePosition donneesGPS, typeDonneesCapteurs lesDonneesC
     //codage du 1e octet
     octetCourant = latitude >> 19;
     trame[i] = octetCourant;
+    
+    Serial.println("TrameEncodée");
 }

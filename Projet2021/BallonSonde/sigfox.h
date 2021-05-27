@@ -58,7 +58,7 @@ class Sigfox
     uint16_t obtenirTemp(void);
 
     bool envoyer(const void* data, uint8_t size);
-    void coderTrame(typePosition donneesGPS, typeDonneesCapteurs lesDonnesCapteurs);
+    void coderTrame(typeDonnees lesDonnees);
     byte trame[12];
 
   private:

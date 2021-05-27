@@ -49,27 +49,20 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script type="text/javascript">
-            function coderEtEnvoyer()
-            {
-                coderTrame();
-                setTimeout(function ()
-                {
-                    document.getElementById("Texte2").innerHTML = "2eTestDeTexteDansLeDiv";
-                }, 5000);
-            }
-            ;
-
-            function coderTrame() {
-                document.getElementById("texteDonnees").innerHTML = "testTexteDansLaDiv";
-            }
-            ;
+        function majDonnees()
+        {
+            document.getElementById("texteDonnees").innerHTML = "2eTestDeTexteDansLeDiv";
+        };
+        function coderTrame() 
+        {
+            document.getElementById("texteDonnees").innerHTML = "testTexteDansLaDiv";
+        };
 
         </script>
     </head>
-    <body>
+    <body onload="coderTrame();">
         <div id="texteDonnees"></div>
-        <div id="Texte2"></div>
-        <input type="button" name="boutonEnvoyer" value="EnvoyerTrame" onclick="coderEtEnvoyer()">
+        <input type="button" name="boutonEnvoyer" value="EnvoyerTrame" onclick="majDonnees())">
     </body>
 </html>
 
@@ -123,7 +116,7 @@ void tacheSigfox(void *pvParameters) // <- une tâche
         // Verrouillage du mutex
         xSemaphoreTake(mutex, portMAX_DELAY);
 
-        BallonSig.coderTrame(lesDonnees.position, lesDonnees.DonneesCapteurs);
+        BallonSig.coderTrame(lesDonnees);
         BallonSig.envoyer(BallonSig.trame, sizeof (BallonSig.trame));
 
         // Déverrouillage du mutex
@@ -234,11 +227,12 @@ void tachePageWeb(void *pvParameters) // <- une tâche
     for (;;) // <- boucle infinie
     {
         ws.loop();
-
+        //affichage de l'adresse IP
+        Serial.print("Adresse IP: ");
+        Serial.println(WiFi.softAPIP()); //Affiche l'adresse IP de l'ESP32 avec WiFi.SoftIP
         if (lesDonnees.position.altitude >= 2000) {
             WiFi.softAPdisconnect(true);
         }
-
 
         if (WiFi.softAPgetStationNum() == 0) {
             delay(50000); //attendre 5 minutes
@@ -282,14 +276,14 @@ void setup() {
     lesDonnees.DonneesCapteurs.temperature = 20;
     lesDonnees.DonneesCapteurs.humidite = 33;
 
-    xTaskCreate(
-            tacheSigfox, /* Task function. */
-            "tacheSigfox", /* name of task. */
-            10000, /* Stack size of task */
-            NULL, /* parameter of the task */
-            1, /* priority of the task */
-            NULL); /* Task handle to keep track of created task */
-
+    /*  xTaskCreate(
+              tacheSigfox, // Task function.
+              "tacheSigfox", // name of task. 
+              10000, // Stack size of task 
+              NULL, // parameter of the task 
+              1, // priority of the task 
+              NULL); // Task handle to keep track of created task 
+     */
     xTaskCreate(
             tacheCarteSD, /* Task function. */
             "tacheCarteSD", /* name of task. */
