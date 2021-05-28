@@ -1,5 +1,5 @@
 build.lolin32-1.0.4/libraries/WebServer.cpp.o: \
- /opt/Esp8266-Arduino-Makefile/libraries/ESPAsyncWebServer/src/WebServer.cpp \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WebServer/src/WebServer.cpp \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/cores/esp32/Arduino.h \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/stdint.h \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/newlib/machine/_default_types.h \
@@ -127,9 +127,14 @@ build.lolin32-1.0.4/libraries/WebServer.cpp.o: \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/cores/esp32/HardwareSerial.h \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/cores/esp32/Esp.h \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/variants/lolin32/pins_arduino.h \
- /opt/Esp8266-Arduino-Makefile/libraries/ESPAsyncWebServer/src/ESPAsyncWebServer.h \
- /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/FS/src/FS.h \
- /opt/Esp8266-Arduino-Makefile/libraries/ESPAsyncWebServer/src/StringArray.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/cores/esp32/esp32-hal-log.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/cores/esp32/libb64/cencode.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WiFi/src/WiFiServer.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/cores/esp32/Server.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WiFi/src/WiFiClient.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/cores/esp32/Client.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WiFi/src/WiFiClient.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WebServer/src/WebServer.h \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WiFi/src/WiFi.h \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/cores/esp32/Print.h \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/cores/esp32/IPv6Address.h \
@@ -173,19 +178,17 @@ build.lolin32-1.0.4/libraries/WebServer.cpp.o: \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/lwip/dhcpserver/dhcpserver.h \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WiFi/src/WiFiAP.h \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WiFi/src/WiFiScan.h \
- /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WiFi/src/WiFiClient.h \
- /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/cores/esp32/Client.h \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WiFi/src/WiFiServer.h \
- /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/cores/esp32/Server.h \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WiFi/src/WiFiUdp.h \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/cores/esp32/Udp.h \
  /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/cores/esp32/cbuf.h \
- /opt/Esp8266-Arduino-Makefile/libraries/AsyncTCP/src/AsyncTCP.h \
- /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/lwip/lwip/pbuf.h \
- /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/lwip/lwip/err.h \
- /opt/Esp8266-Arduino-Makefile/libraries/ESPAsyncWebServer/src/WebResponseImpl.h \
- /opt/Esp8266-Arduino-Makefile/libraries/ESPAsyncWebServer/src/WebHandlerImpl.h \
- /opt/Esp8266-Arduino-Makefile/libraries/ESPAsyncWebServer/src/AsyncWebSocket.h \
- /opt/Esp8266-Arduino-Makefile/libraries/ESPAsyncWebServer/src/ESPAsyncWebServer.h \
- /opt/Esp8266-Arduino-Makefile/libraries/ESPAsyncWebServer/src/AsyncWebSynchronization.h \
- /opt/Esp8266-Arduino-Makefile/libraries/ESPAsyncWebServer/src/AsyncEventSource.h
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WebServer/src/HTTP_Method.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WebServer/src/detail/RequestHandler.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/FS/src/FS.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WebServer/src/detail/RequestHandlersImpl.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WebServer/src/detail/RequestHandler.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/libraries/WebServer/src/detail/mimetable.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/md5.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/esp_config.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/esp_mem.h \
+ /opt/Esp8266-Arduino-Makefile/esp32-1.0.4/tools/sdk/include/mbedtls/mbedtls/check_config.h

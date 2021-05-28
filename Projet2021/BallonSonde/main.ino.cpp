@@ -12,9 +12,7 @@
 #include <SPI.h>
 #include <FS.h>
 #include <string>
-#include <AsyncTCP.h>
-#include <ESPAsyncWebServer.h>
-#include <WebSocketsServer.h>
+#include <WebServer.h>
 
 //Constantes
 #define SCK_PIN 14 //numéro de broche sck de l'esp32
@@ -22,85 +20,98 @@
 #define MOSI_PIN 15 //numéro de broche MOSI de l'esp32
 #define CS_PIN 13 //numéro de broche CS de l'esp32
 
+//configuration réseau pour le point d'accès WiFi
 #define IP_LOCAL IPAddress(192,168,5,1) //adresse ip local de l'esp
 #define GATEWAY IPAddress(192,168,5,1) //passerelle
 #define MASQUE IPAddress(255,255,255,0) //masque de sous-réseaux
 
+//ssid = nom du point d'accès et password = mot de passe
+//pour le point d'accès WiFi
 const char *ssid = "BallonSonde";
 const char *password = "BallonSonde2021";
 
 // Globales
 Sigfox BallonSig(27, 26, true);
 File fichierCSV;
-AsyncWebServer server(80);
-WebSocketsServer ws(81);
-typeDonnees lesDonnees;
+SemaphoreHandle_t mutex = NULL; // Création d'un mutex
+typeDonnees lesDonnees; //les données de la structure typeDonnees
+WebServer serveur(80);
+String pageWeb;
+String pageWebDebut;
+String pageWebFin;
 
-char webpage[] PROGMEM = R"=====(
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>Page WEB esp32</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script type="text/javascript">
-        function majDonnees()
-        {
-            document.getElementById("texteDonnees").innerHTML = "2eTestDeTexteDansLeDiv";
-        };
-        function coderTrame() 
-        {
-            document.getElementById("texteDonnees").innerHTML = "testTexteDansLaDiv";
-        };
-
-        </script>
-    </head>
-    <body onload="coderTrame();">
-        <div id="texteDonnees"></div>
-        <input type="button" name="boutonEnvoyer" value="EnvoyerTrame" onclick="majDonnees())">
-    </body>
-</html>
-
-)=====";
-
-/***********************************************************
- * Fonctions
- */
-
-void notFound(AsyncWebServerRequest *request) {
-    request->send(404, "text/plain", "Page Not found");
-}
-
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
-
-    switch (type) {
-        case WStype_DISCONNECTED:
-            Serial.printf("[%u] Disconnected!\n", num);
-            break;
-        case WStype_CONNECTED:
-        {
-            IPAddress ip = ws.remoteIP(num);
-            Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
-
-            // send message to client
-            ws.sendTXT(num, "Connected from server");
+String convertirDonnees(typeDonnees lesDonnees){
+    //Conversion + construction de la ligne de données à enregistrer dans la carte SD
+        //conversion de la date
+        String sDonnees = String(lesDonnees.date.annee) + "-";
+        //si numéro du mois inférieur à 10 alors, ajout d'un 0 devant sinon, on ne fais rien 
+        sDonnees += (lesDonnees.date.mois < 10 ? "0" + String(lesDonnees.date.mois) : String(lesDonnees.date.mois)) + "-";
+        if (lesDonnees.date.jour < 10) {
+            sDonnees += "0" + String(lesDonnees.date.jour) + " ";
+        } else {
+            sDonnees += String(lesDonnees.date.jour) + " ";
         }
-            break;
-        case WStype_TEXT:
-            Serial.printf("[%u] get Text: %s\n", num, payload);
-            String message = String((char*) (payload));
-            Serial.println(message);
 
-    }
+
+        //conversion de l'heure
+        if (lesDonnees.heures.heure < 10) {
+            sDonnees += "0" + String(lesDonnees.heures.heure) + ":";
+        } else {
+            sDonnees += String(lesDonnees.heures.heure) + ":";
+        }
+        if (lesDonnees.heures.minute < 10) {
+            sDonnees += "0" + String(lesDonnees.heures.minute) + ":";
+        } else {
+            sDonnees += String(lesDonnees.heures.minute) + ":";
+        }
+        if (lesDonnees.heures.seconde < 10) {
+            sDonnees += "0" + String(lesDonnees.heures.seconde) + ";";
+        } else {
+            sDonnees += String(lesDonnees.heures.seconde) + ";";
+        }
+
+        //conversion de la position
+        sDonnees += String(lesDonnees.position.latitude,{6}) + ";";
+        sDonnees += String(lesDonnees.position.longitude,{6}) + ";";
+        sDonnees += String(lesDonnees.position.altitude,{0}) + ";";
+
+        //conversion des données des capteurs
+        sDonnees += String(lesDonnees.DonneesCapteurs.temperature) + ";";
+        sDonnees += String(lesDonnees.DonneesCapteurs.pression) + ";";
+        sDonnees += String(lesDonnees.DonneesCapteurs.cpm) + ";";
+        sDonnees += String(lesDonnees.DonneesCapteurs.humidite) + ";";
+        
+        return sDonnees;
 }
 
-// Création d'un mutex
-SemaphoreHandle_t mutex = NULL;
+void handleRoot() {
+
+    pageWebDebut = "<!DOCTYPE html>"; //début page HTML
+    pageWebDebut += "<head>";
+    pageWebDebut += "<title>Ballon2021</title>";
+    pageWebDebut += "<meta charset='UTF-8'>";
+    pageWebDebut += "<meta name='viewport' content= width=device-width, initial-scale=1.0>";
+    pageWebDebut += "</head>";
+    pageWebDebut = "<body>";
+    pageWebDebut = "<table>";
+    pageWebDebut = "<tr><td>Horodatage</td> <td>Latitude</td> <td>Longitude</td> <td>Altitude</td> <td>Temperature</td> <td>Pression</td> <td>Radiation (cpm)</td> <td>Humidite</td> </tr>";
+    
+    pageWebFin += "<form action = '' method = 'get' >";
+    pageWebFin += "<input type = 'submit' name = 'boutonEnvoyer' value = 'EnvoyerTrame'>";
+    pageWebFin += "</form>";
+    pageWebFin += "</table>";
+    pageWebFin += "</body";
+    pageWebFin += "</html>";
+
+    String msg = convertirDonnees(lesDonnees);
+
+    pageWeb = pageWebDebut + msg + pageWebFin;
+    serveur.send(200, "text/html", pageWeb);
+}
+
+void handleNotFound() { // Page Not found
+    serveur.send(404, "text/plain", "404: Not found");
+}
 
 void tacheSigfox(void *pvParameters) // <- une tâche
 {
@@ -147,45 +158,7 @@ void tacheCarteSD(void *pvParameters) // <- une tâche
         // Verrouillage du mutex
         xSemaphoreTake(mutex, portMAX_DELAY);
 
-        //Conversion + construction de la ligne de données à enregistrer dans la carte SD
-        //conversion de la date
-        String sDonnees = String(lesDonnees.date.annee) + "-";
-        //si numéro du mois inférieur à 10 alors, ajout d'un 0 devant sinon, on ne fais rien 
-        sDonnees += (lesDonnees.date.mois < 10 ? "0" + String(lesDonnees.date.mois) : String(lesDonnees.date.mois)) + "-";
-        if (lesDonnees.date.jour < 10) {
-            sDonnees += "0" + String(lesDonnees.date.jour) + " ";
-        } else {
-            sDonnees += String(lesDonnees.date.jour) + " ";
-        }
-
-
-        //conversion de l'heure
-        if (lesDonnees.heures.heure < 10) {
-            sDonnees += "0" + String(lesDonnees.heures.heure) + ":";
-        } else {
-            sDonnees += String(lesDonnees.heures.heure) + ":";
-        }
-        if (lesDonnees.heures.minute < 10) {
-            sDonnees += "0" + String(lesDonnees.heures.minute) + ":";
-        } else {
-            sDonnees += String(lesDonnees.heures.minute) + ":";
-        }
-        if (lesDonnees.heures.seconde < 10) {
-            sDonnees += "0" + String(lesDonnees.heures.seconde) + ";";
-        } else {
-            sDonnees += String(lesDonnees.heures.seconde) + ";";
-        }
-
-        //conversion de la position
-        sDonnees += String(lesDonnees.position.latitude,{6}) + ";";
-        sDonnees += String(lesDonnees.position.longitude,{6}) + ";";
-        sDonnees += String(lesDonnees.position.altitude,{0}) + ";";
-
-        //conversion des données des capteurs
-        sDonnees += String(lesDonnees.DonneesCapteurs.temperature) + ";";
-        sDonnees += String(lesDonnees.DonneesCapteurs.pression) + ";";
-        sDonnees += String(lesDonnees.DonneesCapteurs.cpm) + ";";
-        sDonnees += String(lesDonnees.DonneesCapteurs.humidite) + ";";
+        String sDonnees = convertirDonnees(lesDonnees);
 
         fichierCSV = SD.open("/TestCSV.csv", FILE_APPEND); //ouverture du fichier en modification
         if (!fichierCSV) {
@@ -210,23 +183,12 @@ void tacheCarteSD(void *pvParameters) // <- une tâche
 
 void tachePageWeb(void *pvParameters) // <- une tâche
 {
-    TickType_t xLastWakeTime;
-    xLastWakeTime = xTaskGetTickCount();
-
-    server.on("/", [](AsyncWebServerRequest * request) {
-
-        request->send_P(200, "text/html", webpage);
-    });
-
-    server.onNotFound(notFound);
-
-    server.begin();
-    ws.begin();
-    ws.onEvent(webSocketEvent);
+    serveur.on("/", handleRoot); // Chargement de la page accueil
+    serveur.onNotFound(handleNotFound); // Chargement de la page Not found
+    serveur.begin();
 
     for (;;) // <- boucle infinie
     {
-        ws.loop();
         //affichage de l'adresse IP
         Serial.print("Adresse IP: ");
         Serial.println(WiFi.softAPIP()); //Affiche l'adresse IP de l'ESP32 avec WiFi.SoftIP
@@ -238,10 +200,11 @@ void tachePageWeb(void *pvParameters) // <- une tâche
             delay(50000); //attendre 5 minutes
             if (WiFi.softAPgetStationNum() == 0) //si toujours aucun client
             {
-                WiFi.softAPdisconnect(false); //deconnecter le wifi
+                WiFi.softAPdisconnect(true); //deconnecter le wifi
             }
         }
-        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(30000)); // toutes les 30000 ms = 30 secondes
+ 
+        serveur.handleClient();
     }
 }
 
@@ -276,7 +239,7 @@ void setup() {
     lesDonnees.DonneesCapteurs.temperature = 20;
     lesDonnees.DonneesCapteurs.humidite = 33;
 
-    /*  xTaskCreate(
+    /*xTaskCreate(
               tacheSigfox, // Task function.
               "tacheSigfox", // name of task. 
               10000, // Stack size of task 
@@ -295,13 +258,13 @@ void setup() {
     xTaskCreate(
             tachePageWeb, /* Task function. */
             "tachePageWeb", /* name of task. */
-            20000, /* Stack size of task */
+            40000, /* Stack size of task */
             NULL, /* parameter of the task */
-            2, /* priority of the task */
+            1, /* priority of the task */
             NULL); /* Task handle to keep track of created task */
 
 }
 
 void loop() {
-    ws.loop();
-} 
+
+}
