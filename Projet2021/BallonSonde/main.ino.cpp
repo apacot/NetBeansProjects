@@ -27,7 +27,7 @@
 
 //ssid = nom du point d'accès et password = mot de passe
 //pour le point d'accès WiFi
-const char *ssid = "BallonSonde";
+const char *ssid = "BallonSondeAP";
 const char *password = "BallonSonde2021";
 
 // Globales
@@ -37,8 +37,6 @@ SemaphoreHandle_t mutex = NULL; // Création d'un mutex
 typeDonnees lesDonnees; //les données de la structure typeDonnees
 WebServer serveur(80);
 String pageWeb;
-String pageWebDebut;
-String pageWebFin;
 
 String convertirDonnees(typeDonnees lesDonnees){
     //Conversion + construction de la ligne de données à enregistrer dans la carte SD
@@ -79,44 +77,46 @@ String convertirDonnees(typeDonnees lesDonnees){
         sDonnees += String(lesDonnees.DonneesCapteurs.temperature) + ";";
         sDonnees += String(lesDonnees.DonneesCapteurs.pression) + ";";
         sDonnees += String(lesDonnees.DonneesCapteurs.cpm) + ";";
-        sDonnees += String(lesDonnees.DonneesCapteurs.humidite) + ";";
+        sDonnees += String(lesDonnees.DonneesCapteurs.humidite) + ";\n";
         
         return sDonnees;
 }
 
 void handleRoot() {
 
-    pageWebDebut = "<!DOCTYPE html>"; //début page HTML
-    pageWebDebut += "<head>";
-    pageWebDebut += "<title>Ballon2021</title>";
-    pageWebDebut += "<meta charset='UTF-8'>";
-    pageWebDebut += "<meta name='viewport' content= width=device-width, initial-scale=1.0>";
-    pageWebDebut += "</head>";
-    pageWebDebut = "<body>";
-    pageWebDebut = "<table>";
-    pageWebDebut = "<tr><td>Horodatage</td> <td>Latitude</td> <td>Longitude</td> <td>Altitude</td> <td>Temperature</td> <td>Pression</td> <td>Radiation (cpm)</td> <td>Humidite</td> </tr>";
+    pageWeb = "<!DOCTYPE html>"; //début page HTML
+    pageWeb += "<head>";
+    pageWeb += "<title>Ballon2021</title>";
+    pageWeb += "<meta charset='UTF-8'>";
+    pageWeb += "<meta name='viewport' content= width=device-width, initial-scale=1.0>";
+    pageWeb += "</head>";
+    pageWeb += "<body>";
+    pageWeb += "<div> <h1> BALLON SONDE 2021 </h1> </div>";
+    pageWeb += "<div><h2> Date : <span> " + String(lesDonnees.date.jour) + "/" + String(lesDonnees.date.mois) + "/" + String(lesDonnees.date.annee) + "</span></h2>";
+    pageWeb += "<h2> Heure : <span>" + String(lesDonnees.heures.heure) + ":" + String(lesDonnees.heures.minute) + ":" + String(lesDonnees.heures.seconde) + "</span></h2>";
+    pageWeb += "<h2> Latitude : <span>" + String(lesDonnees.position.latitude) + "</span></h2>";
+    pageWeb += "<h2> Longitude : <span>" + String(lesDonnees.position.longitude) + "</span></h2>";
+    pageWeb += "<h2> Altitude (m): <span>" + String(lesDonnees.position.altitude) + "</span></h2>";
+    pageWeb += "<h2> Température (°C) : <span>" + String(lesDonnees.DonneesCapteurs.temperature) + "</span></h2>";
+    pageWeb += "<h2> Pression (hpa) : <span>" + String(lesDonnees.DonneesCapteurs.pression) + "</span></h2>";
+    pageWeb += "<h2> Radiation (cpm) : <span>" + String(lesDonnees.DonneesCapteurs.cpm) + "</span></h2>";
+    pageWeb += "<h2> Humidité (%) : <span>" + String(lesDonnees.DonneesCapteurs.humidite) + "</span></h2></div>";
     
-    pageWebFin += "<form action = '' method = 'get' >";
-    pageWebFin += "<input type = 'submit' name = 'boutonEnvoyer' value = 'EnvoyerTrame'>";
-    pageWebFin += "</form>";
-    pageWebFin += "</table>";
-    pageWebFin += "</body";
-    pageWebFin += "</html>";
+    pageWeb += "<form action = '' method = 'get' >";
+    pageWeb += "<input type = 'submit' name = 'boutonEnvoyer' value = 'EnvoyerTrame'>";
+    pageWeb += "</form>";
+    pageWeb += "</body";
+    pageWeb += "</html>";
 
-    String msg = convertirDonnees(lesDonnees);
-
-    pageWeb = pageWebDebut + msg + pageWebFin;
     serveur.send(200, "text/html", pageWeb);
 }
 
-void handleNotFound() { // Page Not found
+void handle_NotFound() { // Page Not found
     serveur.send(404, "text/plain", "404: Not found");
 }
 
 void tacheSigfox(void *pvParameters) // <- une tâche
 {
-    delay(30000);
-
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
 
@@ -139,7 +139,6 @@ void tacheSigfox(void *pvParameters) // <- une tâche
 
 void tacheCarteSD(void *pvParameters) // <- une tâche
 {
-
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
 
@@ -183,30 +182,34 @@ void tacheCarteSD(void *pvParameters) // <- une tâche
 
 void tachePageWeb(void *pvParameters) // <- une tâche
 {
+    TickType_t xLastWakeTime;
+    xLastWakeTime = xTaskGetTickCount();
+    
     serveur.on("/", handleRoot); // Chargement de la page accueil
-    serveur.onNotFound(handleNotFound); // Chargement de la page Not found
+    serveur.onNotFound(handle_NotFound); // Chargement de la page Not found
     serveur.begin();
 
     for (;;) // <- boucle infinie
     {
-        //affichage de l'adresse IP
-        Serial.print("Adresse IP: ");
-        Serial.println(WiFi.softAPIP()); //Affiche l'adresse IP de l'ESP32 avec WiFi.SoftIP
+        serveur.handleClient(); //attente de demande du client
+        
         if (lesDonnees.position.altitude >= 2000) {
-            WiFi.softAPdisconnect(true);
+            WiFi.mode(WIFI_OFF);
         }
-
-        if (WiFi.softAPgetStationNum() == 0) {
-            delay(50000); //attendre 5 minutes
-            if (WiFi.softAPgetStationNum() == 0) //si toujours aucun client
+        
+        if(WiFi.softAPgetStationNum() ==0 )
+        {
+            delay(30000);
+            if(WiFi.softAPgetStationNum() ==0 )
             {
-                WiFi.softAPdisconnect(true); //deconnecter le wifi
-            }
+                WiFi.mode(WIFI_OFF);
+            }             
         }
- 
-        serveur.handleClient();
-    }
+        
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(10)); // toutes les 10 ms
+    } 
 }
+
 
 void setup() {
 
@@ -216,9 +219,11 @@ void setup() {
     //initialisation du mutex
     mutex = xSemaphoreCreateMutex();
 
+    WiFi.persistent(false);
+    
     // Configuration et création du point d'accès
     WiFi.softAPConfig(IP_LOCAL, GATEWAY, MASQUE);
-    WiFi.softAP(ssid, password);
+    WiFi.softAP(ssid, password,1,false,1);
 
     //simulation de données
 
@@ -239,7 +244,8 @@ void setup() {
     lesDonnees.DonneesCapteurs.temperature = 20;
     lesDonnees.DonneesCapteurs.humidite = 33;
 
-    /*xTaskCreate(
+    /*
+    xTaskCreate(
               tacheSigfox, // Task function.
               "tacheSigfox", // name of task. 
               10000, // Stack size of task 
@@ -247,24 +253,33 @@ void setup() {
               1, // priority of the task 
               NULL); // Task handle to keep track of created task 
      */
+    /*
     xTaskCreate(
-            tacheCarteSD, /* Task function. */
-            "tacheCarteSD", /* name of task. */
-            10000, /* Stack size of task */
-            NULL, /* parameter of the task */
-            1, /* priority of the task */
-            NULL); /* Task handle to keep track of created task */
-
+            tacheCarteSD, //Task function. 
+            "tacheCarteSD", //name of task. 
+            10000, //Stack size of task 
+            NULL, //parameter of the task
+            1, //priority of the task 
+            NULL); //Task handle to keep track of created task
+    */
     xTaskCreate(
-            tachePageWeb, /* Task function. */
-            "tachePageWeb", /* name of task. */
-            40000, /* Stack size of task */
-            NULL, /* parameter of the task */
-            1, /* priority of the task */
-            NULL); /* Task handle to keep track of created task */
+            tachePageWeb, // Task function
+            "tachePageWeb", // name of task
+            40000, // Stack size of task
+            NULL, // parameter of the task
+            1, // priority of the task
+            NULL); // Task handle to keep track of created task
 
 }
 
 void loop() {
+    
+    //gestion du serveur web
+  serveur.handleClient();
+  if (lesDonnees.position.altitude > 2000) // si l'altitude est supérieur à 2000 mètres, coupure du wifi et interruption du serveur web
+  {
+    serveur.stop();
+    WiFi.mode(WIFI_OFF);
+  }
 
 }
