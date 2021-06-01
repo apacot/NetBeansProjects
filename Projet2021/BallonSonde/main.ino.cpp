@@ -38,48 +38,48 @@ typeDonnees lesDonnees; //les données de la structure typeDonnees
 WebServer serveur(80);
 String pageWeb;
 
-String convertirDonnees(typeDonnees lesDonnees){
+String convertirDonnees(typeDonnees lesDonnees) {
     //Conversion + construction de la ligne de données à enregistrer dans la carte SD
-        //conversion de la date
-        String sDonnees = String(lesDonnees.date.annee) + "-";
-        //si numéro du mois inférieur à 10 alors, ajout d'un 0 devant sinon, on ne fais rien 
-        sDonnees += (lesDonnees.date.mois < 10 ? "0" + String(lesDonnees.date.mois) : String(lesDonnees.date.mois)) + "-";
-        if (lesDonnees.date.jour < 10) {
-            sDonnees += "0" + String(lesDonnees.date.jour) + " ";
-        } else {
-            sDonnees += String(lesDonnees.date.jour) + " ";
-        }
+    //conversion de la date
+    String sDonnees = String(lesDonnees.date.annee) + "-";
+    //si numéro du mois inférieur à 10 alors, ajout d'un 0 devant sinon, on ne fais rien 
+    sDonnees += (lesDonnees.date.mois < 10 ? "0" + String(lesDonnees.date.mois) : String(lesDonnees.date.mois)) + "-";
+    if (lesDonnees.date.jour < 10) {
+        sDonnees += "0" + String(lesDonnees.date.jour) + " ";
+    } else {
+        sDonnees += String(lesDonnees.date.jour) + " ";
+    }
 
 
-        //conversion de l'heure
-        if (lesDonnees.heures.heure < 10) {
-            sDonnees += "0" + String(lesDonnees.heures.heure) + ":";
-        } else {
-            sDonnees += String(lesDonnees.heures.heure) + ":";
-        }
-        if (lesDonnees.heures.minute < 10) {
-            sDonnees += "0" + String(lesDonnees.heures.minute) + ":";
-        } else {
-            sDonnees += String(lesDonnees.heures.minute) + ":";
-        }
-        if (lesDonnees.heures.seconde < 10) {
-            sDonnees += "0" + String(lesDonnees.heures.seconde) + ";";
-        } else {
-            sDonnees += String(lesDonnees.heures.seconde) + ";";
-        }
+    //conversion de l'heure
+    if (lesDonnees.heures.heure < 10) {
+        sDonnees += "0" + String(lesDonnees.heures.heure) + ":";
+    } else {
+        sDonnees += String(lesDonnees.heures.heure) + ":";
+    }
+    if (lesDonnees.heures.minute < 10) {
+        sDonnees += "0" + String(lesDonnees.heures.minute) + ":";
+    } else {
+        sDonnees += String(lesDonnees.heures.minute) + ":";
+    }
+    if (lesDonnees.heures.seconde < 10) {
+        sDonnees += "0" + String(lesDonnees.heures.seconde) + ";";
+    } else {
+        sDonnees += String(lesDonnees.heures.seconde) + ";";
+    }
 
-        //conversion de la position
-        sDonnees += String(lesDonnees.position.latitude,{6}) + ";";
-        sDonnees += String(lesDonnees.position.longitude,{6}) + ";";
-        sDonnees += String(lesDonnees.position.altitude,{0}) + ";";
+    //conversion de la position
+    sDonnees += String(lesDonnees.position.latitude,{6}) + ";";
+    sDonnees += String(lesDonnees.position.longitude,{6}) + ";";
+    sDonnees += String(lesDonnees.position.altitude,{0}) + ";";
 
-        //conversion des données des capteurs
-        sDonnees += String(lesDonnees.DonneesCapteurs.temperature) + ";";
-        sDonnees += String(lesDonnees.DonneesCapteurs.pression) + ";";
-        sDonnees += String(lesDonnees.DonneesCapteurs.cpm) + ";";
-        sDonnees += String(lesDonnees.DonneesCapteurs.humidite) + ";\n";
-        
-        return sDonnees;
+    //conversion des données des capteurs
+    sDonnees += String(lesDonnees.DonneesCapteurs.temperature) + ";";
+    sDonnees += String(lesDonnees.DonneesCapteurs.pression) + ";";
+    sDonnees += String(lesDonnees.DonneesCapteurs.cpm) + ";";
+    sDonnees += String(lesDonnees.DonneesCapteurs.humidite) + ";\n";
+
+    return sDonnees;
 }
 
 void handleRoot() {
@@ -89,26 +89,49 @@ void handleRoot() {
     pageWeb += "<title>Ballon2021</title>";
     pageWeb += "<meta charset='UTF-8'>";
     pageWeb += "<meta name='viewport' content= width=device-width, initial-scale=1.0>";
+    pageWeb += "<script>";
+    pageWeb += "setInterval(function() {";
+    pageWeb += "afficherData();";
+    pageWeb += "},10000";
+    pageWeb += "function afficherData() {";
+    pageWeb += "document.getElementById('Date').innerHTML = '" + String(lesDonnees.date.jour) + '/' + String(lesDonnees.date.mois) + '/' + String(lesDonnees.date.annee) + "'";
+    pageWeb += "</script>";
     pageWeb += "</head>";
     pageWeb += "<body>";
     pageWeb += "<div> <h1> BALLON SONDE 2021 </h1> </div>";
-    pageWeb += "<div><h2> Date : <span> " + String(lesDonnees.date.jour) + "/" + String(lesDonnees.date.mois) + "/" + String(lesDonnees.date.annee) + "</span></h2>";
-    pageWeb += "<h2> Heure : <span>" + String(lesDonnees.heures.heure) + ":" + String(lesDonnees.heures.minute) + ":" + String(lesDonnees.heures.seconde) + "</span></h2>";
-    pageWeb += "<h2> Latitude : <span>" + String(lesDonnees.position.latitude) + "</span></h2>";
-    pageWeb += "<h2> Longitude : <span>" + String(lesDonnees.position.longitude) + "</span></h2>";
-    pageWeb += "<h2> Altitude (m): <span>" + String(lesDonnees.position.altitude) + "</span></h2>";
-    pageWeb += "<h2> Température (°C) : <span>" + String(lesDonnees.DonneesCapteurs.temperature) + "</span></h2>";
-    pageWeb += "<h2> Pression (hpa) : <span>" + String(lesDonnees.DonneesCapteurs.pression) + "</span></h2>";
-    pageWeb += "<h2> Radiation (cpm) : <span>" + String(lesDonnees.DonneesCapteurs.cpm) + "</span></h2>";
-    pageWeb += "<h2> Humidité (%) : <span>" + String(lesDonnees.DonneesCapteurs.humidite) + "</span></h2></div>";
-    
-    pageWeb += "<form action = '' method = 'get' >";
-    pageWeb += "<input type = 'submit' name = 'boutonEnvoyer' value = 'EnvoyerTrame'>";
+    pageWeb += "<div><h2> Date : <span id = 'Date'> </span></h2>";
+    pageWeb += "<h2> Heure : <span id = 'Heure'>" + String(lesDonnees.heures.heure) + ":" + String(lesDonnees.heures.minute) + ":" + String(lesDonnees.heures.seconde) + "</span></h2>";
+    pageWeb += "<h2> Latitude : <span id = 'Latitude'>" + String(lesDonnees.position.latitude,{6}) + "</span></h2>";
+    pageWeb += "<h2> Longitude : <span id = 'Longitude'>" + String(lesDonnees.position.longitude,{6}) + "</span></h2>";
+    pageWeb += "<h2> Altitude (m): <span id = 'Altitude'>" + String(lesDonnees.position.altitude) + "</span></h2>";
+    pageWeb += "<h2> Température (°C) : <span id = 'Temperature'>" + String(lesDonnees.DonneesCapteurs.temperature) + "</span></h2>";
+    pageWeb += "<h2> Pression (hpa) : <span id = 'Pression>" + String(lesDonnees.DonneesCapteurs.pression) + "</span></h2>";
+    pageWeb += "<h2> Radiation (cpm) : <span id = 'Radiation'>" + String(lesDonnees.DonneesCapteurs.cpm) + "</span></h2>";
+    pageWeb += "<h2> Humidité (%HR) : <span id = 'Humidite'>" + String(lesDonnees.DonneesCapteurs.humidite) + "</span></h2></div>";
+
+    pageWeb += "<form action = '/form' method = 'get'>";
+    pageWeb += "<input type = 'submit' ID = 'boutonEnvoyer' value = 'EnvoyerTrame'>";
     pageWeb += "</form>";
     pageWeb += "</body";
     pageWeb += "</html>";
 
     serveur.send(200, "text/html", pageWeb);
+}
+
+void handleForm() {
+    
+    BallonSig.coderTrame(lesDonnees);
+    bool ret = BallonSig.envoyer(BallonSig.trame, sizeof (BallonSig.trame));
+
+    String pageOK;
+    //bool ret = true;
+    
+    if (ret) {
+        pageOK += "Trame envoyee avec succes";
+    } else {
+        pageOK += "Trame non envoyee, revenez sur la page precedente";
+    }
+    serveur.send(200, "text/plain", pageOK);
 }
 
 void handle_NotFound() { // Page Not found
@@ -120,7 +143,7 @@ void tacheSigfox(void *pvParameters) // <- une tâche
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
 
-    BallonSig.begin();
+    //BallonSig.begin();
 
     for (;;) // <- boucle infinie
     {
@@ -184,46 +207,46 @@ void tachePageWeb(void *pvParameters) // <- une tâche
 {
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
-    
+
     serveur.on("/", handleRoot); // Chargement de la page accueil
+    serveur.on("/form", handleForm);
     serveur.onNotFound(handle_NotFound); // Chargement de la page Not found
     serveur.begin();
 
     for (;;) // <- boucle infinie
     {
         serveur.handleClient(); //attente de demande du client
-        
+
         if (lesDonnees.position.altitude >= 2000) {
             WiFi.mode(WIFI_OFF);
         }
-        
-        if(WiFi.softAPgetStationNum() ==0 )
-        {
-            delay(30000);
-            if(WiFi.softAPgetStationNum() ==0 )
-            {
-                WiFi.mode(WIFI_OFF);
-            }             
-        }
-        
-        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(10)); // toutes les 10 ms
-    } 
-}
 
+        if (WiFi.softAPgetStationNum() == 0) {
+            delay(30000);
+            if (WiFi.softAPgetStationNum() == 0) {
+                WiFi.mode(WIFI_OFF);
+            }
+        }
+
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(60000)); // toutes les 10 ms
+    }
+}
 
 void setup() {
 
     Serial.begin(115200); //initialisation de la liaison série à l'esp32
     delay(1000);
+    
+    BallonSig.begin(); //initialisation communication sigfox
 
     //initialisation du mutex
     mutex = xSemaphoreCreateMutex();
 
     WiFi.persistent(false);
-    
+
     // Configuration et création du point d'accès
     WiFi.softAPConfig(IP_LOCAL, GATEWAY, MASQUE);
-    WiFi.softAP(ssid, password,1,false,1);
+    WiFi.softAP(ssid, password);
 
     //simulation de données
 
@@ -261,7 +284,7 @@ void setup() {
             NULL, //parameter of the task
             1, //priority of the task 
             NULL); //Task handle to keep track of created task
-    */
+     */
     xTaskCreate(
             tachePageWeb, // Task function
             "tachePageWeb", // name of task
@@ -273,13 +296,13 @@ void setup() {
 }
 
 void loop() {
-    
+
     //gestion du serveur web
-  serveur.handleClient();
-  if (lesDonnees.position.altitude > 2000) // si l'altitude est supérieur à 2000 mètres, coupure du wifi et interruption du serveur web
-  {
-    serveur.stop();
-    WiFi.mode(WIFI_OFF);
-  }
+    serveur.handleClient();
+    if (lesDonnees.position.altitude > 2000) // si l'altitude est supérieur à 2000 mètres, coupure du wifi et interruption du serveur web
+    {
+        serveur.stop();
+        WiFi.mode(WIFI_OFF);
+    }
 
 }
