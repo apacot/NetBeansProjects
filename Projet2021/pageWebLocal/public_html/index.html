@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Ballon2021</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            function afficherData() {
+                
+                document.getElementById("Date").innerHTML = "21/05/2021";
+                document.getElementById("Heure").innerHTML = "13:06:05";
+                document.getElementById("Longitude").innerHTML = "47.158751";
+                document.getElementById("Latitude").innerHTML = "0.259823";
+                document.getElementById("Altitude").innerHTML = "30000";
+                document.getElementById("Temperature").innerHTML = "20";
+                document.getElementById("Pression").innerHTML = "1025";
+                document.getElementById("Radiation").innerHTML = "4";
+                document.getElementById("Humidite").innerHTML = "27.8";
+                
+            }
+            setInterval("afficherData()", 10000);
+        </script>
+    </head>
+    <body>
+        <div> <h1> BALLON SONDE 2021 </h1> </div>
+        <div>
+            <h2> Date : <span id = "Date"></span></h2>
+            <h2> Heure : <span id = "Heure"></span></h2>
+            <h2> Longitude : <span id = "Longitude"></span></h2>
+            <h2> Latitude : <span id = "Latitude"></span></h2>
+            <h2> Altitude (m): <span id = "Altitude"></span></h2>
+            <h2> Température (°C) : <span id = "Temperature"></span></h2>
+            <h2> Pression (hpa) : <span id = "Pression"></span></h2>
+            <h2> Radiation (cpm) : <span id = 'Radiation'></span></h2>
+            <h2> Humidité (%HR) : <span id = 'Humidite'></span></h2>
+            
+        </div>
+    </body>
+</html>

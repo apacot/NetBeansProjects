@@ -84,33 +84,35 @@ String convertirDonnees(typeDonnees lesDonnees) {
 
 void handleRoot() {
 
-    pageWeb = "<!DOCTYPE html>"; //début page HTML
+    pageWeb = "<!DOCTYPE html>";
     pageWeb += "<head>";
     pageWeb += "<title>Ballon2021</title>";
     pageWeb += "<meta charset='UTF-8'>";
     pageWeb += "<meta name='viewport' content= width=device-width, initial-scale=1.0>";
     pageWeb += "<script>";
     pageWeb += "function afficherData() {";
-    pageWeb += "document.getElementById('Date').innerHTML = " + String(lesDonnees.date) + ";";
-    pageWeb += "document.getElementById('Heure').innerHTML = " + String(lesDonnees.heures) + ";";
-    pageWeb += "document.getElementById('Longitude').innerHTML = " + String(lesDonnees.position.latitude,{6}) + ";";
-    pageWeb += "document.getElementById('Latitude').innerHTML = " + String(lesDonnees.position.longitude,{6}) + ";";
-    pageWeb += "document.getElementById('Altitude').innerHTML = " + String(lesDonnees.position.altitude,{6}) + ";";
-    pageWeb += "document.getElementById('Temperature').innerHTML = " + String(lesDonnees.DonneesCapteurs.temperature) +";";
-    pageWeb += "document.getElementById('Pression').innerHTML = " + String(lesDonnees.DonneesCapteurs.pression) + ";";
-    pageWeb += "document.getElementById('Radiation').innerHTML = " + String(lesDonnees.DonneesCapteurs.cpm) + ";";
-    pageWeb += "document.getElementById('Humidite').innerHTML = " + String(lesDonnees.DonneesCapteurs.humidite) + ";";
+    pageWeb += "document.getElementById('Date').innerHTML = '" + String(lesDonnees.date.jour) + "/" + String(lesDonnees.date.mois) + "/" + String(lesDonnees.date.annee) + "';";
+    pageWeb += "document.getElementById('Heure').innerHTML = '" + String(lesDonnees.heures.heure) + ":" + String(lesDonnees.heures.minute) + ":" + String(lesDonnees.heures.seconde) + "';";
+    pageWeb += "document.getElementById('Longitude').innerHTML = '" + String(lesDonnees.position.latitude,{6}) + "';";
+    pageWeb += "document.getElementById('Latitude').innerHTML = '" + String(lesDonnees.position.longitude,{6}) + "';";
+    pageWeb += "document.getElementById('Altitude').innerHTML = '" + String(lesDonnees.position.altitude) + "';";
+    pageWeb += "document.getElementById('Temperature').innerHTML = '" + String(lesDonnees.DonneesCapteurs.temperature) +"';";
+    pageWeb += "document.getElementById('Pression').innerHTML = '" + String(lesDonnees.DonneesCapteurs.pression) + "';";
+    pageWeb += "document.getElementById('Radiation').innerHTML = '" + String(lesDonnees.DonneesCapteurs.cpm) + "';";
+    pageWeb += "document.getElementById('Humidite').innerHTML = '" + String(lesDonnees.DonneesCapteurs.humidite) + "';";
+    pageWeb += "}";
+    pageWeb += "setInterval('afficherData()', 10000);";
     pageWeb += "</script>";
     pageWeb += "</head>";
     pageWeb += "<body>";
-    pageWeb += "<div> <h1> BALLON SONDE 2021 </h1> </div>";
-    pageWeb += "<div><h2> Date : <span id = 'Date'> </span></h2>";
+    pageWeb += "<div> <h1> BALLON SONDE 2021 </h1></div>";
+    pageWeb += "<div><h2> Date : <span id = 'Date'></span></h2>";
     pageWeb += "<h2> Heure : <span id = 'Heure'></span></h2>";
     pageWeb += "<h2> Latitude : <span id = 'Latitude'></span></h2>";
     pageWeb += "<h2> Longitude : <span id = 'Longitude'></span></h2>";
     pageWeb += "<h2> Altitude (m): <span id = 'Altitude'></span></h2>";
     pageWeb += "<h2> Température (°C) : <span id = 'Temperature'></span></h2>";
-    pageWeb += "<h2> Pression (hpa) : <span id = 'Pression></span></h2>";
+    pageWeb += "<h2> Pression (hpa) : <span id = 'Pression'></span></h2>";
     pageWeb += "<h2> Radiation (cpm) : <span id = 'Radiation'></span></h2>";
     pageWeb += "<h2> Humidité (%HR) : <span id = 'Humidite'></span></h2></div>";
 
