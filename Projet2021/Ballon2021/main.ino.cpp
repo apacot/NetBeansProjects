@@ -12,9 +12,7 @@ typeDonnees lesDonnees;
 
 void setup() {
 
-    Serial.begin(SERIAL_BAUD);
-    BallonSig.begin();
-    
+    Serial.begin(SERIAL_BAUD);    
     
     Taches *nouvelleTache = new Taches();
 
@@ -65,13 +63,8 @@ void setup() {
             &lesDonnees, /* parameter of the task */
             1, /* priority of the task */
             NULL); /* Task handle to keep track of created task */
-        xTaskCreate(
-            nouvelleTache->tachePageWeb, /* Task function. */
-            "tachePageWeb", /* name of task. */
-            40000, /* Stack size of task */
-            &lesDonnees, /* parameter of the task */
-            1, /* priority of the task */
-            NULL); /* Task handle to keep track of created task */
+        
+        
 
 
 }

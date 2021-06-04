@@ -12,18 +12,8 @@
 #define SERIALGPS 1
 
 
-#include <Arduino.h>
-#include <Wire.h>
-#include <BME280I2C.h>
-#include <RadiationWatch.h>
-#include <TinyGPS.h>
-#include <SPI.h>
-#include <FS.h>
-#include <SD.h>
-#include <string>
-#include <HardwareSerial.h>
+
 #include "structures.h"
-#include <WebServer.h>
 
 class Taches {
 public:
@@ -35,7 +25,6 @@ public:
    static void tacheAffichage(void* parameter);
    static void tacheSigfox(void* parameter);
    static void tacheCarteSD(void* parameter);
-   static void tachePageWeb(void* parameter);
 private:
    
   
