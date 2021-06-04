@@ -8,11 +8,15 @@
  */
 #include "structures.h"
 #include "taches.h"
+#include "sigfox.h"
 typeDonnees lesDonnees;
 
 void setup() {
 
-    Serial.begin(SERIAL_BAUD);    
+    Serial.begin(SERIAL_BAUD);
+    BallonSig.begin();
+    
+    
     
     Taches *nouvelleTache = new Taches();
 
@@ -63,8 +67,6 @@ void setup() {
             &lesDonnees, /* parameter of the task */
             1, /* priority of the task */
             NULL); /* Task handle to keep track of created task */
-        
-        
 
 
 }

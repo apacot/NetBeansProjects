@@ -7,7 +7,7 @@
  * @details Classe qui regroupe l'ensemble des méthodes utilisées pour l'envoi de message sigfox
  */
 #include "sigfox.h"
-#include "structures.h"
+//#include "structures.h"
 #include "HardwareSerial.h"
 
 //Message buffer
@@ -295,48 +295,4 @@ void Sigfox::coderTrame(typeDonnees *lesDonnees)
     //codage du 1e octet
     octetCourant = latitude >> 19;
     trame[i] = octetCourant;
-}
-String Sigfox::convertirDonnees(typeDonnees *lesDonnees)
-{
-    //Conversion + construction de la ligne de données à enregistrer dans la carte SD
-    //conversion de la date
-    String sDonnees = String(lesDonnees->date.annee) + "-";
-    //si numéro du mois inférieur à 10 alors, ajout d'un 0 devant sinon, on ne fais rien 
-    sDonnees += (lesDonnees->date.mois < 10 ? "0" + String(lesDonnees->date.mois) : String(lesDonnees->date.mois)) + "-";
-    if (lesDonnees->date.jour < 10) {
-        sDonnees += "0" + String(lesDonnees->date.jour) + " ";
-    } else {
-        sDonnees += String(lesDonnees->date.jour) + " ";
-    }
-
-
-    //conversion de l'heure
-    if (lesDonnees->heures.heure < 10) {
-        sDonnees += "0" + String(lesDonnees->heures.heure) + ":";
-    } else {
-        sDonnees += String(lesDonnees->heures.heure) + ":";
-    }
-    if (lesDonnees->heures.minute < 10) {
-        sDonnees += "0" + String(lesDonnees->heures.minute) + ":";
-    } else {
-        sDonnees += String(lesDonnees->heures.minute) + ":";
-    }
-    if (lesDonnees->heures.seconde < 10) {
-        sDonnees += "0" + String(lesDonnees->heures.seconde) + ";";
-    } else {
-        sDonnees += String(lesDonnees->heures.seconde) + ";";
-    }
-
-    //conversion de la position
-    sDonnees += String(lesDonnees->position.latitude,{6}) + ";";
-    sDonnees += String(lesDonnees->position.longitude,{6}) + ";";
-    sDonnees += String(lesDonnees->position.altitude,{0}) + ";";
-
-    //conversion des données des capteurs
-    sDonnees += String(lesDonnees->DonneesCapteurs.temperature) + ";";
-    sDonnees += String(lesDonnees->DonneesCapteurs.pression) + ";";
-    sDonnees += String(lesDonnees->DonneesCapteurs.cpm) + ";";
-    sDonnees += String(lesDonnees->DonneesCapteurs.humidite) + ";";
-
-    return sDonnees;
 }

@@ -16,15 +16,26 @@
 #include <SPI.h>
 #include <FS.h>
 #include <SD.h>
-#include <string>
+#include <WiFi.h>
 #include <HardwareSerial.h>
-#include "structures.h"
 #include "sigfox.h"
+#include <string>
+#include <WebServer.h>
 
 #define SCK_PIN 14 //numéro de broche sck de l'esp32
 #define MISO_PIN 2 //numéro de broche MISO de l'esp32
 #define MOSI_PIN 15 //numéro de broche MOSI de l'esp32
 #define CS_PIN 13 //numéro de broche CS de l'esp32
+
+//configuration réseau pour le point d'accès WiFi
+#define IP_LOCAL IPAddress(192,168,5,1) //adresse ip local de l'esp
+#define GATEWAY IPAddress(192,168,5,1) //passerelle
+#define MASQUE IPAddress(255,255,255,0) //masque de sous-réseaux
+
+//ssid = nom du point d'accès et password = mot de passe
+//pour le point d'accès WiFi
+const char *ssid = "BallonSondeAP";
+const char *password = "BallonSonde2021";
 
 SemaphoreHandle_t mutex;
 RadiationWatch radiationWatch(32, 33);
@@ -32,9 +43,9 @@ TinyGPS gps;
 HardwareSerial serialGps(SERIALGPS); // sur hardware serial 1
 Sigfox BallonSig(27, 26, true);
 File fichierCSV;
-const char *ssid = "BallonSondeAP";
-const char *password = "totototo";
 int compteurGPS = 0;
+WebServer serveur(80);
+String pageWeb;
 
 /**
  * @brief Taches::Taches() constructeur de la classe Taches
@@ -282,6 +293,7 @@ void Taches::tacheAffichage(void* parameter) {
  */
 void Taches::tacheSigfox(void* parameter) {
 
+
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
     typeDonnees *dataSigfox = (typeDonnees *) parameter;
@@ -328,7 +340,52 @@ void Taches::tacheCarteSD(void* parameter) {
         // Verrouillage du mutex
         xSemaphoreTake(mutex, portMAX_DELAY);
 
-        String sDonnees = BallonSig.convertirDonnees(dataSD);
+        //Conversion + construction de la ligne de données à enregistrer dans la carte SD
+        //conversion de la date
+        String sDonnees = String(dataSD->date.annee) + "-";
+        //si numéro du mois inférieur à 10 alors, ajout d'un 0 devant sinon, on ne fais rien 
+        sDonnees += (dataSD->date.mois < 10 ? "0" + String(dataSD->date.mois) : String(dataSD->date.mois)) + "-";
+        if (dataSD->date.jour < 10) {
+            sDonnees += "0" + String(dataSD->date.jour) + " ";
+        } else {
+            sDonnees += String(dataSD->date.jour) + " ";
+        }
+
+
+        //conversion de l'heure
+        if (dataSD->heures.heure < 10) {
+            sDonnees += "0" + String(dataSD->heures.heure) + ":";
+        } else {
+            sDonnees += String(dataSD->heures.heure) + ":";
+        }
+        if (dataSD->heures.minute < 10) {
+            sDonnees += "0" + String(dataSD->heures.minute) + ":";
+        } else {
+            sDonnees += String(dataSD->heures.minute) + ":";
+        }
+        if (dataSD->heures.seconde < 10) {
+            sDonnees += "0" + String(dataSD->heures.seconde) + ";";
+        } else {
+            sDonnees += String(dataSD->heures.seconde) + ";";
+        }
+
+        //conversion de la position
+        sDonnees += String(dataSD->position.latitude, {
+            6
+        }) + ";";
+        sDonnees += String(dataSD->position.longitude, {
+            6
+        }) + ";";
+        sDonnees += String(dataSD->position.altitude, {
+            0
+        }) + ";";
+
+        //conversion des données des capteurs
+        sDonnees += String(dataSD->DonneesCapteurs.temperature) + ";";
+        sDonnees += String(dataSD->DonneesCapteurs.pression) + ";";
+        sDonnees += String(dataSD->DonneesCapteurs.cpm) + ";";
+        sDonnees += String(dataSD->DonneesCapteurs.humidite) + ";";
+        //sDonnees += String(compteurGPS) + ";";
 
         fichierCSV = SD.open("/TestCSV.csv", FILE_APPEND); //ouverture du fichier en modification
         if (!fichierCSV) {
@@ -349,4 +406,111 @@ void Taches::tacheCarteSD(void* parameter) {
 
     }
 
+}
+
+void Taches::tachePageWeb(void* parameter) // <- une tâche
+{
+    TickType_t xLastWakeTime;
+    xLastWakeTime = xTaskGetTickCount();
+
+    serveur.on("/", handleRoot); // Chargement de la page accueil
+    serveur.on("/form", handleForm);
+    serveur.onNotFound(handle_NotFound); // Chargement de la page Not found
+    serveur.begin();
+
+    for (;;) // <- boucle infinie
+    {
+        serveur.handleClient(); //attente de demande du client
+
+        if (lesDonnees->position.altitude >= 2000) {
+            WiFi.mode(WIFI_OFF);
+        }
+
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(60000)); // toutes les 10 ms
+    }
+}
+
+void handleRoot() {
+
+    pageWeb = "<!DOCTYPE html>";
+    pageWeb += "<head>";
+    pageWeb += "<title>Ballon2021</title>";
+    pageWeb += "<meta charset='UTF-8'>";
+    pageWeb += "<meta name='viewport' content= width=device-width, initial-scale=1.0>";
+    pageWeb += "<script>";
+    pageWeb += "function afficherData() {";
+    pageWeb += "document.getElementById('Date').innerHTML = '" + String(lesDonnees.date.jour) + "/" + String(lesDonnees.date.mois) + "/" + String(lesDonnees.date.annee) + "';";
+    pageWeb += "document.getElementById('Heure').innerHTML = '" + String(lesDonnees.heures.heure) + ":" + String(lesDonnees.heures.minute) + ":" + String(lesDonnees.heures.seconde) + "';";
+    pageWeb += "document.getElementById('Longitude').innerHTML = '" + String(lesDonnees.position.latitude,{6}) + "';";
+    pageWeb += "document.getElementById('Latitude').innerHTML = '" + String(lesDonnees.position.longitude,{6}) + "';";
+    pageWeb += "document.getElementById('Altitude').innerHTML = '" + String(lesDonnees.position.altitude) + "';";
+    pageWeb += "document.getElementById('Temperature').innerHTML = '" + String(lesDonnees.DonneesCapteurs.temperature) +"';";
+    pageWeb += "document.getElementById('Pression').innerHTML = '" + String(lesDonnees.DonneesCapteurs.pression) + "';";
+    pageWeb += "document.getElementById('Radiation').innerHTML = '" + String(lesDonnees.DonneesCapteurs.cpm) + "';";
+    pageWeb += "document.getElementById('Humidite').innerHTML = '" + String(lesDonnees.DonneesCapteurs.humidite) + "';";
+    pageWeb += "}";
+    pageWeb += "setInterval('afficherData()', 10000);";
+    pageWeb += "</script>";
+    pageWeb += "</head>";
+    pageWeb += "<body>";
+    pageWeb += "<div> <h1> BALLON SONDE 2021 </h1></div>";
+    pageWeb += "<div><h2> Date : <span id = 'Date'></span></h2>";
+    pageWeb += "<h2> Heure : <span id = 'Heure'></span></h2>";
+    pageWeb += "<h2> Latitude : <span id = 'Latitude'></span></h2>";
+    pageWeb += "<h2> Longitude : <span id = 'Longitude'></span></h2>";
+    pageWeb += "<h2> Altitude (m): <span id = 'Altitude'></span></h2>";
+    pageWeb += "<h2> Température (°C) : <span id = 'Temperature'></span></h2>";
+    pageWeb += "<h2> Pression (hpa) : <span id = 'Pression'></span></h2>";
+    pageWeb += "<h2> Radiation (cpm) : <span id = 'Radiation'></span></h2>";
+    pageWeb += "<h2> Humidité (%HR) : <span id = 'Humidite'></span></h2></div>";
+
+    pageWeb += "<form action = '/form' method = 'get'>";
+    pageWeb += "<input type = 'submit' ID = 'boutonEnvoyer' value = 'EnvoyerTrame'>";
+    pageWeb += "</form>";
+    pageWeb += "</body";
+    pageWeb += "</html>";
+
+    serveur.send(200, "text/html", pageWeb);
+}
+
+void handleForm() {
+    
+    BallonSig.coderTrame(lesDonnees);
+    bool ret = BallonSig.envoyer(BallonSig.trame, sizeof (BallonSig.trame));
+
+    String pageOK;
+    //bool ret = true;
+    
+    if (ret) {
+        pageOK += "Trame envoyee avec succes";
+    } else {
+        pageOK += "Trame non envoyee, revenez sur la page precedente";
+    }
+    serveur.send(200, "text/plain", pageOK);
+}
+
+void handle_NotFound() { // Page Not found
+    serveur.send(404, "text/plain", "404: Not found");
+}
+
+void tacheSigfox(void *pvParameters) // <- une tâche
+{
+    TickType_t xLastWakeTime;
+    xLastWakeTime = xTaskGetTickCount();
+
+    //BallonSig.begin();
+
+    for (;;) // <- boucle infinie
+    {
+        // Verrouillage du mutex
+        xSemaphoreTake(mutex, portMAX_DELAY);
+
+        BallonSig.coderTrame(lesDonnees);
+        BallonSig.envoyer(BallonSig.trame, sizeof (BallonSig.trame));
+
+        // Déverrouillage du mutex
+        xSemaphoreGive(mutex);
+
+        vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(600000)); // toutes les 600000 ms = 10 minutes
+    }
 }

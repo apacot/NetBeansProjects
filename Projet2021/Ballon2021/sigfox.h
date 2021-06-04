@@ -28,10 +28,8 @@ class Sigfox
     String   obtenirPAC(void);
     uint16_t obtenirTemp(void);
 
-    
     bool envoyer(const void* data, uint8_t size);
     void coderTrame(typeDonnees *lesDonnees);
-    String convertirDonnees(typeDonnees *lesDonnees);
     byte trame[12];
 
   private:
