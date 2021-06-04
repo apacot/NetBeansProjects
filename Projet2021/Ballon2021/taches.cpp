@@ -412,6 +412,7 @@ void Taches::tachePageWeb(void* parameter) // <- une tâche
 {
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
+    typeDonnees *dataPageWeb = (typeDonnees *) parameter;
 
     serveur.on("/", handleRoot); // Chargement de la page accueil
     serveur.on("/form", handleForm);
@@ -439,15 +440,15 @@ void handleRoot() {
     pageWeb += "<meta name='viewport' content= width=device-width, initial-scale=1.0>";
     pageWeb += "<script>";
     pageWeb += "function afficherData() {";
-    pageWeb += "document.getElementById('Date').innerHTML = '" + String(lesDonnees.date.jour) + "/" + String(lesDonnees.date.mois) + "/" + String(lesDonnees.date.annee) + "';";
-    pageWeb += "document.getElementById('Heure').innerHTML = '" + String(lesDonnees.heures.heure) + ":" + String(lesDonnees.heures.minute) + ":" + String(lesDonnees.heures.seconde) + "';";
-    pageWeb += "document.getElementById('Longitude').innerHTML = '" + String(lesDonnees.position.latitude,{6}) + "';";
-    pageWeb += "document.getElementById('Latitude').innerHTML = '" + String(lesDonnees.position.longitude,{6}) + "';";
-    pageWeb += "document.getElementById('Altitude').innerHTML = '" + String(lesDonnees.position.altitude) + "';";
-    pageWeb += "document.getElementById('Temperature').innerHTML = '" + String(lesDonnees.DonneesCapteurs.temperature) +"';";
-    pageWeb += "document.getElementById('Pression').innerHTML = '" + String(lesDonnees.DonneesCapteurs.pression) + "';";
-    pageWeb += "document.getElementById('Radiation').innerHTML = '" + String(lesDonnees.DonneesCapteurs.cpm) + "';";
-    pageWeb += "document.getElementById('Humidite').innerHTML = '" + String(lesDonnees.DonneesCapteurs.humidite) + "';";
+    pageWeb += "document.getElementById('Date').innerHTML = '" + String(lesDonnees->date.jour) + "/" + String(lesDonnees->date.mois) + "/" + String(lesDonnees->date.annee) + "';";
+    pageWeb += "document.getElementById('Heure').innerHTML = '" + String(lesDonnees->heures.heure) + ":" + String(lesDonnees->heures.minute) + ":" + String(lesDonnees->heures.seconde) + "';";
+    pageWeb += "document.getElementById('Longitude').innerHTML = '" + String(lesDonnees->position.latitude,{6}) + "';";
+    pageWeb += "document.getElementById('Latitude').innerHTML = '" + String(lesDonnees->position.longitude,{6}) + "';";
+    pageWeb += "document.getElementById('Altitude').innerHTML = '" + String(lesDonnees->position.altitude) + "';";
+    pageWeb += "document.getElementById('Temperature').innerHTML = '" + String(lesDonnees->DonneesCapteurs.temperature) +"';";
+    pageWeb += "document.getElementById('Pression').innerHTML = '" + String(lesDonnees->DonneesCapteurs.pression) + "';";
+    pageWeb += "document.getElementById('Radiation').innerHTML = '" + String(lesDonnees->DonneesCapteurs.cpm) + "';";
+    pageWeb += "document.getElementById('Humidite').innerHTML = '" + String(lesDonnees->DonneesCapteurs.humidite) + "';";
     pageWeb += "}";
     pageWeb += "setInterval('afficherData()', 10000);";
     pageWeb += "</script>";
