@@ -11,9 +11,8 @@
 #define LED 22
 #define SERIALGPS 1
 
-
-
 #include "structures.h"
+
 class Taches {
 public:
     Taches();
@@ -24,10 +23,10 @@ public:
    static void tacheAffichage(void* parameter);
    static void tacheSigfox(void* parameter);
    static void tacheCarteSD(void* parameter);
-   static void tachePageWeb(void* parameter);
-private:
+   void tachePageWeb(void* parameter);
    
-  
+private:
+    
 };
 
 

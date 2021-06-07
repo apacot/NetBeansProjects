@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=esp32-Linux
 CND_ARTIFACT_DIR_Debug=dist/Debug/esp32-Linux
-CND_ARTIFACT_NAME_Debug=ballonsonde
-CND_ARTIFACT_PATH_Debug=dist/Debug/esp32-Linux/ballonsonde
+CND_ARTIFACT_NAME_Debug=personnel
+CND_ARTIFACT_PATH_Debug=dist/Debug/esp32-Linux/personnel
 CND_PACKAGE_DIR_Debug=dist/Debug/esp32-Linux/package
-CND_PACKAGE_NAME_Debug=ballonsonde.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/esp32-Linux/package/ballonsonde.tar
+CND_PACKAGE_NAME_Debug=personnel.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/esp32-Linux/package/personnel.tar
 # Release configuration
 CND_PLATFORM_Release=esp32-Linux
 CND_ARTIFACT_DIR_Release=dist/Release/esp32-Linux
-CND_ARTIFACT_NAME_Release=ballonsonde
-CND_ARTIFACT_PATH_Release=dist/Release/esp32-Linux/ballonsonde
+CND_ARTIFACT_NAME_Release=personnel
+CND_ARTIFACT_PATH_Release=dist/Release/esp32-Linux/personnel
 CND_PACKAGE_DIR_Release=dist/Release/esp32-Linux/package
-CND_PACKAGE_NAME_Release=ballonsonde.tar
-CND_PACKAGE_PATH_Release=dist/Release/esp32-Linux/package/ballonsonde.tar
+CND_PACKAGE_NAME_Release=personnel.tar
+CND_PACKAGE_PATH_Release=dist/Release/esp32-Linux/package/personnel.tar
 #
 # include compiler specific variables
 #

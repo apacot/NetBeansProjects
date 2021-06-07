@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>pageWeb.h</itemPath>
       <itemPath>sigfox.h</itemPath>
       <itemPath>structures.h</itemPath>
       <itemPath>taches.h</itemPath>
@@ -16,6 +17,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>main.ino.cpp</itemPath>
+      <itemPath>pageWeb.cpp</itemPath>
       <itemPath>sigfox.cpp</itemPath>
       <itemPath>taches.cpp</itemPath>
     </logicalFolder>
@@ -42,6 +44,10 @@
       <compileType>
       </compileType>
       <item path="main.ino.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="pageWeb.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="pageWeb.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="sigfox.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -75,6 +81,10 @@
         </asmTool>
       </compileType>
       <item path="main.ino.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="pageWeb.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="pageWeb.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="sigfox.cpp" ex="false" tool="1" flavor2="0">
       </item>

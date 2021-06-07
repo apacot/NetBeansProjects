@@ -19,8 +19,7 @@
 #include <WiFi.h>
 #include <HardwareSerial.h>
 #include "sigfox.h"
-#include <string>
-#include <WebServer.h>
+#include "pageWeb.h"
 
 #define SCK_PIN 14 //numéro de broche sck de l'esp32
 #define MISO_PIN 2 //numéro de broche MISO de l'esp32
@@ -44,8 +43,9 @@ HardwareSerial serialGps(SERIALGPS); // sur hardware serial 1
 Sigfox BallonSig(27, 26, true);
 File fichierCSV;
 int compteurGPS = 0;
-WebServer serveur(80);
-String pageWeb;
+pageWeb WebPage;
+
+typeDonnees *lesDonnees;
 
 /**
  * @brief Taches::Taches() constructeur de la classe Taches
@@ -409,83 +409,20 @@ void Taches::tacheCarteSD(void* parameter)
 
 }
 
-void handleRoot(typeDonnees *lesDonnees) {
-
-    pageWeb = "<!DOCTYPE html>";
-    pageWeb += "<head>";
-    pageWeb += "<title>Ballon2021</title>";
-    pageWeb += "<meta charset='UTF-8'>";
-    pageWeb += "<meta name='viewport' content= width=device-width, initial-scale=1.0>";
-    pageWeb += "<script>";
-    pageWeb += "function afficherData() {";
-    pageWeb += "document.getElementById('Date').innerHTML = '" + String(lesDonnees->date.jour) + "/" + String(lesDonnees->date.mois) + "/" + String(lesDonnees->date.annee) + "';";
-    pageWeb += "document.getElementById('Heure').innerHTML = '" + String(lesDonnees->heures.heure) + ":" + String(lesDonnees->heures.minute) + ":" + String(lesDonnees->heures.seconde) + "';";
-    pageWeb += "document.getElementById('Longitude').innerHTML = '" + String(lesDonnees->position.latitude,{6}) + "';";
-    pageWeb += "document.getElementById('Latitude').innerHTML = '" + String(lesDonnees->position.longitude,{6}) + "';";
-    pageWeb += "document.getElementById('Altitude').innerHTML = '" + String(lesDonnees->position.altitude) + "';";
-    pageWeb += "document.getElementById('Temperature').innerHTML = '" + String(lesDonnees->DonneesCapteurs.temperature) +"';";
-    pageWeb += "document.getElementById('Pression').innerHTML = '" + String(lesDonnees->DonneesCapteurs.pression) + "';";
-    pageWeb += "document.getElementById('Radiation').innerHTML = '" + String(lesDonnees->DonneesCapteurs.cpm) + "';";
-    pageWeb += "document.getElementById('Humidite').innerHTML = '" + String(lesDonnees->DonneesCapteurs.humidite) + "';";
-    pageWeb += "}";
-    pageWeb += "setInterval('afficherData()', 10000);";
-    pageWeb += "</script>";
-    pageWeb += "</head>";
-    pageWeb += "<body>";
-    pageWeb += "<div> <h1> BALLON SONDE 2021 </h1></div>";
-    pageWeb += "<div><h2> Date : <span id = 'Date'></span></h2>";
-    pageWeb += "<h2> Heure : <span id = 'Heure'></span></h2>";
-    pageWeb += "<h2> Latitude : <span id = 'Latitude'></span></h2>";
-    pageWeb += "<h2> Longitude : <span id = 'Longitude'></span></h2>";
-    pageWeb += "<h2> Altitude (m): <span id = 'Altitude'></span></h2>";
-    pageWeb += "<h2> Température (°C) : <span id = 'Temperature'></span></h2>";
-    pageWeb += "<h2> Pression (hpa) : <span id = 'Pression'></span></h2>";
-    pageWeb += "<h2> Radiation (cpm) : <span id = 'Radiation'></span></h2>";
-    pageWeb += "<h2> Humidité (%HR) : <span id = 'Humidite'></span></h2></div>";
-
-    pageWeb += "<form action = '/form' method = 'get'>";
-    pageWeb += "<input type = 'submit' ID = 'boutonEnvoyer' value = 'EnvoyerTrame'>";
-    pageWeb += "</form>";
-    pageWeb += "</body";
-    pageWeb += "</html>";
-
-    serveur.send(200, "text/html", pageWeb);
-}
-
-void handleForm(typeDonnees *lesDonnees) {
-    
-    BallonSig.coderTrame(lesDonnees);
-    bool ret = BallonSig.envoyer(BallonSig.trame, sizeof (BallonSig.trame));
-
-    String pageOK;
-    //bool ret = true;
-    
-    if (ret) {
-        pageOK += "Trame envoyee avec succes";
-    } else {
-        pageOK += "Trame non envoyee, revenez sur la page precedente";
-    }
-    serveur.send(200, "text/plain", pageOK);
-}
-
-void handle_NotFound() { // Page Not found
-    serveur.send(404, "text/plain", "404: Not found");
-}
-
 void Taches::tachePageWeb(void* parameter) // <- une tâche
 {
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
     typeDonnees *dataPageWeb = (typeDonnees *) parameter;
 
-    serveur.on("/", handleRoot(dataPageWeb)); // Chargement de la page accueil
-    serveur.on("/form", handleForm(dataPageWeb));
-    serveur.onNotFound(handle_NotFound); // Chargement de la page Not found
-    serveur.begin();
+    WebPage.serveur.on("/", WebPage.handleRoot(dataPageWeb)); // Chargement de la page accueil
+    WebPage.serveur.on("/form", WebPage.handleForm(dataPageWeb,BallonSig));
+    WebPage.serveur.onNotFound(WebPage.handle_NotFound()); // Chargement de la page Not found
+    WebPage.serveur.begin();
 
     for (;;) // <- boucle infinie
     {
-        serveur.handleClient(); //attente de demande du client
+        WebPage.serveur.handleClient(); //attente de demande du client
 
         if (dataPageWeb->position.altitude >= 2000) {
             WiFi.mode(WIFI_OFF);

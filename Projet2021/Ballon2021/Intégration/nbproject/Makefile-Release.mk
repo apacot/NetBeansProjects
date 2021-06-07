@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/main.ino.o \
+	${OBJECTDIR}/pageWeb.o \
 	${OBJECTDIR}/sigfox.o \
 	${OBJECTDIR}/taches.o
 
@@ -68,6 +69,11 @@ ${OBJECTDIR}/main.ino.o: main.ino.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.ino.o main.ino.cpp
+
+${OBJECTDIR}/pageWeb.o: pageWeb.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/pageWeb.o pageWeb.cpp
 
 ${OBJECTDIR}/sigfox.o: sigfox.cpp
 	${MKDIR} -p ${OBJECTDIR}
