@@ -150,8 +150,6 @@ void tacheSigfox(void *pvParameters) // <- une tâche
     TickType_t xLastWakeTime;
     xLastWakeTime = xTaskGetTickCount();
 
-    //BallonSig.begin();
-
     for (;;) // <- boucle infinie
     {
         // Verrouillage du mutex
@@ -274,7 +272,6 @@ void setup() {
     lesDonnees.DonneesCapteurs.temperature = 20;
     lesDonnees.DonneesCapteurs.humidite = 33;
 
-    /*
     xTaskCreate(
               tacheSigfox, // Task function.
               "tacheSigfox", // name of task. 
@@ -282,8 +279,8 @@ void setup() {
               NULL, // parameter of the task 
               1, // priority of the task 
               NULL); // Task handle to keep track of created task 
-     */
-    /*
+    
+    
     xTaskCreate(
             tacheCarteSD, //Task function. 
             "tacheCarteSD", //name of task. 
@@ -291,7 +288,7 @@ void setup() {
             NULL, //parameter of the task
             1, //priority of the task 
             NULL); //Task handle to keep track of created task
-     */
+    
     xTaskCreate(
             tachePageWeb, // Task function
             "tachePageWeb", // name of task

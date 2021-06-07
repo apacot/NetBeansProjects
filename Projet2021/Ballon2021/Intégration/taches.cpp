@@ -427,7 +427,7 @@ void Taches::tachePageWeb(void* parameter) // <- une tâche
         if (dataPageWeb->position.altitude >= 2000) {
             WiFi.mode(WIFI_OFF);
         }
-
+        
         vTaskDelayUntil(&xLastWakeTime, pdMS_TO_TICKS(60000)); // toutes les 10 ms
     }
 }
